@@ -14,6 +14,10 @@ database = client["NVGT"]
 students_collection = database["Students"]
 staff_collection = database["Staff"]
 
+#NOT USING THIS FOR SECURITY RIGHT NOW
+#Later, this will be a randomly assigned key. I have it static for testing purposes
+app.secret_key = 'testing'
+
 
 # Login page
 @app.route('/', methods=['GET', 'POST'])
@@ -139,8 +143,5 @@ def create_appointment():
 
 
 if __name__ == '__main__':
-    #NOT USING THIS FOR SECURITY RIGHT NOW
-    #Later, this will be a randomly assigned key. I have it static for testing purposes
-    app.secret_key = 'testing'
 
     app.run(debug=True)
