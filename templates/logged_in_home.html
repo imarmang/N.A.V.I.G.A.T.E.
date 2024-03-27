@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Boxicon link -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet"
+      href="{{url_for('static',filename='css/home_page.css') }}">
+    <title>Home</title>
+  </head>
+  <body>
+    <div class="side-bar">
+      <div class="logo-menu">
+        <h2 class="logo">N.A.V.I.G.A.T.E.</h2>
+        <!-- Getting it from boxicon -->
+        <i class="bx bx-menu toggle-btn"></i>
+      </div>
+
+      <!-- Creating the list -->
+      <ul class="list">
+        <li class="list-item active">
+          <a href="#">
+            <i class="bx bxs-home"></i>
+            <span class="link-name" style="--i: 1">Home</span>
+          </a>
+        </li>
+        <li class="list-item">
+          <a href="#">
+            <i class="bx bxs-user-account"></i>
+            <span class="link-name" style="--i: 2">Account</span>
+          </a>
+        </li>
+        <li class="list-item">
+          <a href="#">
+            <i class="bx bxs-calendar"></i>
+            <span class="link-name" style="--i: 3">Appointments</span>
+          </a>
+        </li>
+        <li class="list-item">
+          <a href="#">
+            <i class="bx bxs-chat"></i>
+            <span class="link-name" style="--i: 4">Messages</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <script type="text/javascript"
+      src="{{ url_for('static',filename='script/home_page.js') }}"></script>
+  </body>
+</html>
