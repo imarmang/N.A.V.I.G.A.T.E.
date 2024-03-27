@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session
 
 # Going to use this for encryption most likely
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -42,6 +42,7 @@ def login_successful(username, password):
 
     # Checks if the username and password match the database
     if student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
+        session['n_number'] = student['student_info']['nNumber']
         return True
     else:
         return False
@@ -102,8 +103,44 @@ def logged_in_home():
 
 @app.route('/fetch_tutor_info')
 def fetch_tutor_info():
-    pass
+    tutor_info = staff_collection.find_one({'student_info'})
+
+    return render_template('logged_in_home.html', tutor_info=tutor_info)
+
+
+@app.route('/create_appointment', methods = ['GET', 'POST'])
+def create_appointment():
+
+    #Retrieving N# from session
+    nNumber = session.get('n_number')
+
+    #Checking if user is logged in
+    if nNumber is None:
+        #Redirect to login if user is not logged in
+        return redirect(url_for('student_home'))
+
+    #Putting this in here for now
+    #TODO: Fix the name of the table
+    appointment_collection = database["Appoitnments"]
+
+    if request.method == 'POST':
+
+        #We need the date and course to make the appointment
+        #Not sure if these are going to be using forms. I have it as this for now
+
+        inputDict = {
+            'nNumber': nNumber,
+            'date': request.form['Date'],
+            'Subject': request.form['Subject'],
+            'Course': request.form['course_ID']
+        }
+
+        appointment_collection.insert_one(inputDict)
 
 
 if __name__ == '__main__':
+    #NOT USING THIS FOR SECURITY RIGHT NOW
+    #Later, this will be a randomly assigned key. I have it static for testing purposes
+    app.secret_key = 'testing'
+
     app.run(debug=True)
