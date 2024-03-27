@@ -1,87 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{url_for('static',filename='css/style.css') }}"
-    />
-    <title>N.A.V.I.G.A.T.E.</title>
-  </head>
-  <body>
-    <div class="wrapper">
-      <!-- Navigation links on the top -->
-      <nav class="nav">
-        <div class="nav-logo">
-          {#Remove the stupid link#}
-          <a href="staff_home" class="nav-link nav-logo"></a>
-        </div>
-        <div class="nav-menu" id="navMenu">
-          <ul>
-            <li><a href="/" class="link">Student Home</a></li>
-            <li>
-              <a href="staff_home" class="link active">Staff Home</a>
-            </li>
-          </ul>
-        </div>
-        <!-- Log in and sign up buttons
+{% extends "login_base.html" %} {% block Title %} N.A.V.I.G.A.T.E. {% endblock
+%} {% block body %}
+
+<div class="wrapper">
+  <!-- Navigation links on the top -->
+  <nav class="nav">
+    <div class="nav-logo">
+      {#Remove the stupid link#}
+      <a href="staff_home" class="nav-link nav-logo"></a>
+    </div>
+    <div class="nav-menu" id="navMenu">
+      <ul>
+        <li><a href="/" class="link">Student Home</a></li>
+        <li>
+          <a href="staff_home" class="link active">Staff Home</a>
+        </li>
+      </ul>
+    </div>
+    <!-- Log in and sign up buttons
         <div class="nav-button">
           <button class="btn white-btn" id="loginBtn" onclick="login()">
             Sign In
           </button>
         </div> -->
 
-        <div class="nav-menu-btn">
-          <i class="bx bx-menu" onclick="homeFunction()"></i>
-        </div>
-      </nav>
-
-      <!-----------------------------------------Form box ------------------------------------>
-      <div class="staffBoxWrapper">
-        <nav class="staff-form-box">
-          <!------------------------------------- Login Form ------------------------------------>
-          <div class="login-container" id="login">
-            <form action="/" method="post">
-              <div class="top">
-                <header>Staff Login</header>
-              </div>
-              <div class="input-box">
-                <input
-                  type="text"
-                  class="input-field"
-                  placeholder="Username or Staff Email"
-                  name="username"
-                />
-                <i class="bx bx-user"></i>
-              </div>
-              <div class="input-box">
-                <input
-                  type="password"
-                  class="input-field"
-                  placeholder="Password"
-                  name="password"
-                />
-                <i class="bx bx-lock-alt"></i>
-              </div>
-
-              <div class="input-box">
-                <input type="submit" class="submit" value="Sign In" />
-              </div>
-              <div class="two-col">
-                <div class="two">
-                  <label><a href="#">Forgot your password?</a></label>
-                </div>
-              </div>
-            </form>
-          </div>
-        </nav>
-      </div>
+    <div class="nav-menu-btn">
+      <i class="bx bx-menu" onclick="homeFunction()"></i>
     </div>
-  </body>
-</html>
+  </nav>
+
+  <!-----------------------------------------Form box ------------------------------------>
+  <div class="staffBoxWrapper">
+    <nav class="staff-form-box">
+      <!------------------------------------- Login Form ------------------------------------>
+      <div class="login-container" id="login">
+        <form action="/" method="post">
+          <div class="top">
+            <header>Staff Login</header>
+          </div>
+          <div class="input-box">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="Username or Staff Email"
+              name="username"
+            />
+            <i class="bx bx-user"></i>
+          </div>
+          <div class="input-box">
+            <input
+              type="password"
+              class="input-field"
+              placeholder="Password"
+              name="password"
+            />
+            <i class="bx bx-lock-alt"></i>
+          </div>
+
+          <div class="input-box">
+            <input type="submit" class="submit" value="Sign In" />
+          </div>
+          <div class="two-col">
+            <div class="two">
+              <label><a href="#">Forgot your password?</a></label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </nav>
+  </div>
+</div>
+{% endblock %}

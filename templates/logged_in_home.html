@@ -9,9 +9,23 @@
       href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet"
-      href="{{url_for('static',filename='css/home_page.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/home_page.css') }}"
+    />
+
     <title>Home</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
   </head>
   <body>
     <div class="side-bar">
@@ -50,7 +64,41 @@
       </ul>
     </div>
 
-    <script type="text/javascript"
-      src="{{ url_for('static',filename='script/home_page.js') }}"></script>
+    <div class="container">
+        <h2>Make an Appointment</h2>
+      <div class="calendar"></div>
+    </div>
+    <!-- Importing the jQuery file -->
+{#    <script#}
+{#      type="jQuery"#}
+{#      src="{{ url_for('static',filename='script/calendar.js') }}">#}
+{#    </script>#}
+     <script>
+      $(document).ready(function () {
+        $(".calendar").fullCalendar({
+            header:
+            {
+                left: 'month, agendaWeek, agendaDay, list',
+                center: 'title',
+                right: 'prev, today, next',
+
+            },
+            buttonText:
+            {
+                today: 'Today',
+                month: 'Month',
+                week: 'Week',
+                day: 'Day',
+                list: "List",
+            },
+
+        });
+
+      });
+    </script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/home_page.js') }}"
+    ></script>
   </body>
 </html>
