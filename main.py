@@ -12,6 +12,7 @@ app = Flask(__name__)
 client = pymongo.MongoClient("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l4xvkly.mongodb.net/")
 database = client["NVGT"]
 students_collection = database["Students"]
+staff_collection = database["Staff"]
 
 
 # Login page
@@ -23,8 +24,6 @@ def student_home():
         # Variables to hold username and password
         username = request.form['username']
         password = request.form['password']
-
-        print(students_collection.find_one({'student_info.email': username}))
 
         # If the credentials are good, then go to logged in page. Else, do nothing for now
         if login_successful(username, password):
@@ -48,42 +47,40 @@ def login_successful(username, password):
         return False
 
 
-# Flask Route to handle account creation
+#Flask Route to handle account creation
 @app.route('/create_account', methods = ['POST'])
 def create_account():
-    # If structure to determine if POST was used
+    #If structure to determine if POST was used
     if request.method == 'POST':
 
-        # I request the email up here to check if it is already in use
+        #I request the email up here to check if it is already in use
         email = request.form['email']
 
         #Determine if email is already in use
-        # TODO let user know it is already in use
+        #TODO let user know it is already in use
         if email_already_used(email):
             return render_template('student_home.html')
 
-        # Only add user if email is unique
+        #Only add user if email is unique
         else:
             #Get information from the inputs in the HTML page
             firstName = request.form['firstName']
             lastName = request.form['lastName']
             password = request.form['password']
+            nNumber = request.form['nNumber']
 
-            # TODO add input box for N# and then add it into this function to be used.
-            # I AM USING N01234567 FOR NOW
-
-            # Encrypt password before sending it into the database
+            #Encrypt password before sending it into the database
             pw_hash = generate_password_hash(password).decode('utf-8')
 
-            # Input information into database by wrapping it in a dictionary
-            inputDict = {'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'N#': 'N01234567'}}
+            #Input information into database by wrapping it in a dictionary
+            inputDict = {'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'N#': nNumber}}
 
             students_collection.insert_one(inputDict)
 
             return render_template('student_home.html')
 
 
-# Function to check if email is already used
+#Function to check if email is already used
 def email_already_used(email):
     if students_collection.find_one({'student_info.email': email}) is None:
         return False
@@ -103,6 +100,10 @@ def logged_in_home():
     return render_template('logged_in_home.html')
 
 
+@app.route('/fetch_tutor_info')
+def fetch_tutor_info():
+    pass
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
