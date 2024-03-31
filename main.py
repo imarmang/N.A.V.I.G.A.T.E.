@@ -1,6 +1,5 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify
 
-# Going to use this for encryption most likely
 from flask_bcrypt import generate_password_hash, check_password_hash
 
 # Database access
@@ -47,6 +46,7 @@ def login_successful(username, password):
     # Checks if the username and password match the database
     if student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
         session['n_number'] = student['student_info']['nNumber']
+        print(session['n_number'])
         return True
     else:
         return False
@@ -125,7 +125,7 @@ def create_appointment():
 
     #Putting this in here for now
     #TODO: Fix the name of the table
-    appointment_collection = database["Appoitnments"]
+    appointment_collection = database["Appointments"]
 
     if request.method == 'POST':
 
@@ -141,6 +141,19 @@ def create_appointment():
 
         appointment_collection.insert_one(inputDict)
 
+#To be used for creating appointments using the calendar.
+@app.route('/get_appointments', methods = ['GET'])
+def calendar():
+    appointment_collection = database["Appointments"]
+    appointments = []
+
+    # Only pull the columns I need from DB.
+    for appointment in appointment_collection.find({'nNumber': session['n_number']}, {'_id': 0, 'Appointment_date': 1, 'Course': 1, 'Subject': 1}):
+
+        appointments.append(appointment)
+
+    # Returns the appointments list as JSON object
+    return jsonify(appointments)
 
 if __name__ == '__main__':
 
