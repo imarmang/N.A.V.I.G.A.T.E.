@@ -34,7 +34,7 @@ def student_home():
         else:
             pass
 
-    return render_template('student_home.html')
+    return render_template('student_login.html')
 
 
 # Function to handle checking the username and password. Will check the database.
@@ -46,7 +46,7 @@ def login_successful(username, password):
     # Checks if the username and password match the database
     if student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
         session['n_number'] = student['student_info']['nNumber']
-        print(session['n_number'])
+        #print(session['n_number'])
         return True
     else:
         return False
@@ -64,7 +64,7 @@ def create_account():
         # Determine if email is already in use
         # TODO let user know it is already in use
         if email_already_used(email):
-            return render_template('student_home.html')
+            return render_template('student_login.html')
 
         # Only add user if email is unique
         else:
@@ -82,7 +82,7 @@ def create_account():
 
             students_collection.insert_one(inputDict)
 
-            return render_template('student_home.html')
+            return render_template('student_login.html')
 
 
 # Function to check if email is already used
@@ -94,9 +94,9 @@ def email_already_used(email):
 
 
 # Accessing the staff home
-@app.route('/staff_home')
-def staff_home():
-    return render_template('staff_home.html')
+@app.route('/staff_login')
+def staff_login():
+    return render_template('staff_login.html')
 
 
 # Home page WIP
@@ -121,7 +121,7 @@ def create_appointment():
     # Checking if user is logged in
     if nNumber is None:
         # Redirect to login if user is not logged in
-        return redirect(url_for('student_home'))
+        return redirect(url_for('student_login'))
 
     # Putting this in here for now
     # TODO: Fix the name of the table
