@@ -9,12 +9,6 @@
 
 body
 {
-    /* Add an image */
-    /* background-image: url('../images/NSU_background.jpeg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden; */
     background: #fff;
 }
 
@@ -27,33 +21,39 @@ body
     background: #2F4263;
     padding: 6px;
     transition: .5s;
+    z-index: 100;
+}
+
+.container {
+    z-index: 1;
 }
 /* When active */
 .side-bar.active {
     width: 260px;
 }
 
-.side-bar .logo-menu{
+.side-bar .nav-menu{
     display: flex;
     align-items: center;
     width: 100%;
     height: 70px;
 }
 
-.side-bar .logo-menu .logo{
+.side-bar .nav-menu .logo{
     font-size: 25px;
     color: #fff;
     opacity: 0;
     pointer-events: none;
     transition: .3s;
+    font-weight: 600;
 }
 /* When active */
-.side-bar.active .logo-menu .logo {
+.side-bar.active .nav-menu .logo {
     opacity: 1;
     transition-delay: .2s;
 }
 
-.side-bar .logo-menu .toggle-btn {
+.side-bar .nav-menu .toggle-btn {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -67,7 +67,7 @@ body
     transition: .5s;
 }
 /* When active */
-.side-bar.active .logo-menu .toggle-btn {
+.side-bar.active .nav-menu .toggle-btn {
     left: 90%;
 }
 
@@ -117,3 +117,24 @@ body
     pointer-events: auto;
     transition-delay: calc(.075s * var(--i));
 }
+
+/*.container {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*}*/
+
+.appointmentButton {
+    background-color: #007bff; /* Blue color, adjust as needed */
+    color: #ffffff; /* White text color */
+    border: none; /* Remove default button border */
+    padding: 10px 20px; /* Adjust padding as needed */
+    font-size: 16px; /* Adjust font size as needed */
+    cursor: pointer; /* Show pointer cursor on hover */
+    border-radius: 5px; /* Add rounded corners */
+  }
+  
+  .appointmentButton:hover {
+    background-color: #0056b3; /* Darker blue color on hover, adjust as needed */
+  }
+  

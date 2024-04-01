@@ -41,12 +41,10 @@ body
 }
 
 .nav-logo {
-    width: 480px;
-    height: 100px;
-    background: url('../images/nsu-logo.png') no-repeat;
+    color: white;
+    font-size: 25px;
+    font-weight: 600;
 }
-
-
 
 .nav-menu ul{
     display: flex;
@@ -358,4 +356,9 @@ header
     height: 400px;
     overflow: hidden;
     z-index: 2;
+}
+
+#appointmentButton
+{
+    float: right;
 }

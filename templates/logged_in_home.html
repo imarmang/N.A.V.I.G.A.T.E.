@@ -23,14 +23,16 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css"
     />
+    {# Importing the jQuery file #}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    <script src="{{ url_for('static',filename='script/calendar.js') }}"></script>
   </head>
   <body>
     <div class="side-bar">
-      <div class="logo-menu">
-        <h2 class="logo">N.A.V.I.G.A.T.E.</h2>
+      <div class="nav-menu">
+        <p class="logo">N.A.V.I.G.A.T.E.</p>
         <!-- Getting it from boxicon -->
         <i class="bx bx-menu toggle-btn"></i>
       </div>
@@ -65,37 +67,45 @@
     </div>
 
     <div class="container">
-        <h2>Make an Appointment</h2>
-      <div class="calendar"></div>
+      <h2>Your Calendar</h2>
+        <div class="calendar"></div>
+        <dialog>
+  <button autofocus>Close</button>
+  <p>This modal dialog has a groovy backdrop!</p>
+</dialog>
+<button class="appointmentButton">Show the dialog</button>
     </div>
-    <!-- Importing the jQuery file -->
-{#    <script#}
-{#      type="jQuery"#}
-{#      src="{{ url_for('static',filename='script/calendar.js') }}">#}
-{#    </script>#}
-     <script>
-      $(document).ready(function () {
-        $(".calendar").fullCalendar({
-            header:
-            {
-                left: 'month, agendaWeek, agendaDay, list',
-                center: 'title',
-                right: 'prev, today, next',
 
-            },
-            buttonText:
-            {
-                today: 'Today',
-                month: 'Month',
-                week: 'Week',
-                day: 'Day',
-                list: "List",
-            },
+    <!-- Delete after -->
+    <style>
+      ::backdrop {
+        background-image: linear-gradient(
+          45deg,
+          magenta,
+          rebeccapurple,
+          dodgerblue,
+          green
+        );
+        opacity: 0.75;
+      }
+    </style>
+    <script>
+      // Button
+      const dialog = document.querySelector("dialog");
+      const showButton = document.querySelector("dialog + button");
+      const closeButton = document.querySelector("dialog button");
 
-        });
+      // "Show the dialog" button opens the dialog modally
+      showButton.addEventListener("click", () => {
+        dialog.showModal();
+      });
 
+      // "Close" button closes the dialog
+      closeButton.addEventListener("click", () => {
+        dialog.close();
       });
     </script>
+    <!-- Delete -->
     <script
       type="text/javascript"
       src="{{ url_for('static',filename='script/home_page.js') }}"
