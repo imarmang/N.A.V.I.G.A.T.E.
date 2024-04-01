@@ -13,8 +13,8 @@ database = client["NVGT"]
 students_collection = database["Students"]
 staff_collection = database["Staff"]
 
-#NOT USING THIS FOR SECURITY RIGHT NOW
-#Later, this will be a randomly assigned key. I have it static for testing purposes
+# NOT USING THIS FOR SECURITY RIGHT NOW
+# Later, this will be a randomly assigned key. I have it static for testing purposes
 app.secret_key = 'testing'
 
 
@@ -52,32 +52,32 @@ def login_successful(username, password):
         return False
 
 
-#Flask Route to handle account creation
+# Flask Route to handle account creation
 @app.route('/create_account', methods = ['POST'])
 def create_account():
-    #If structure to determine if POST was used
+    # If structure to determine if POST was used
     if request.method == 'POST':
 
-        #I request the email up here to check if it is already in use
+        # I request the email up here to check if it is already in use
         email = request.form['email']
 
-        #Determine if email is already in use
-        #TODO let user know it is already in use
+        # Determine if email is already in use
+        # TODO let user know it is already in use
         if email_already_used(email):
             return render_template('student_home.html')
 
-        #Only add user if email is unique
+        # Only add user if email is unique
         else:
-            #Get information from the inputs in the HTML page
+            # Get information from the inputs in the HTML page
             firstName = request.form['firstName']
             lastName = request.form['lastName']
             password = request.form['password']
             nNumber = request.form['nNumber']
 
-            #Encrypt password before sending it into the database
+            # Encrypt password before sending it into the database
             pw_hash = generate_password_hash(password).decode('utf-8')
 
-            #Input information into database by wrapping it in a dictionary
+            # Input information into database by wrapping it in a dictionary
             inputDict = {'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'N#': nNumber}}
 
             students_collection.insert_one(inputDict)
@@ -85,7 +85,7 @@ def create_account():
             return render_template('student_home.html')
 
 
-#Function to check if email is already used
+# Function to check if email is already used
 def email_already_used(email):
     if students_collection.find_one({'student_info.email': email}) is None:
         return False
@@ -115,22 +115,22 @@ def fetch_tutor_info():
 @app.route('/create_appointment', methods = ['GET', 'POST'])
 def create_appointment():
 
-    #Retrieving N# from session
+    # Retrieving N# from session
     nNumber = session.get('n_number')
 
-    #Checking if user is logged in
+    # Checking if user is logged in
     if nNumber is None:
-        #Redirect to login if user is not logged in
+        # Redirect to login if user is not logged in
         return redirect(url_for('student_home'))
 
-    #Putting this in here for now
-    #TODO: Fix the name of the table
+    # Putting this in here for now
+    # TODO: Fix the name of the table
     appointment_collection = database["Appointments"]
 
     if request.method == 'POST':
 
-        #We need the date and course to make the appointment
-        #Not sure if these are going to be using forms. I have it as this for now
+        # We need the date and course to make the appointment
+        # Not sure if these are going to be using forms. I have it as this for now
 
         inputDict = {
             'nNumber': nNumber,
@@ -141,7 +141,7 @@ def create_appointment():
 
         appointment_collection.insert_one(inputDict)
 
-#To be used for creating appointments using the calendar.
+# To be used for creating appointments using the calendar.
 @app.route('/get_appointments', methods = ['GET'])
 def calendar():
     appointment_collection = database["Appointments"]
