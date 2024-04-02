@@ -46,7 +46,9 @@ body
     pointer-events: none;
     transition: .3s;
     font-weight: 600;
+    padding: 20px;
 }
+
 /* When active */
 .side-bar.active .nav-menu .logo {
     opacity: 1;
@@ -66,6 +68,7 @@ body
     cursor: pointer;
     transition: .5s;
 }
+
 /* When active */
 .side-bar.active .nav-menu .toggle-btn {
     left: 90%;
@@ -118,23 +121,87 @@ body
     transition-delay: calc(.075s * var(--i));
 }
 
-/*.container {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    align-items: center;*/
-/*}*/
 
-.appointmentButton {
-    background-color: #007bff; /* Blue color, adjust as needed */
-    color: #ffffff; /* White text color */
-    border: none; /* Remove default button border */
-    padding: 10px 20px; /* Adjust padding as needed */
-    font-size: 16px; /* Adjust font size as needed */
-    cursor: pointer; /* Show pointer cursor on hover */
-    border-radius: 5px; /* Add rounded corners */
-  }
-  
-  .appointmentButton:hover {
-    background-color: #0056b3; /* Darker blue color on hover, adjust as needed */
-  }
-  
+/* ---------------------------------------------------------------------------------------- */
+/* Your calendar and the Make Appointment */
+#blur.active {
+    /*filter: blur(10px);*/
+    pointer-events: none;
+    user-select: none;
+}
+
+.buttonAndLogo {
+    display: flex;
+    margin-left: 140px;
+    margin-top: 25px;
+}
+
+.name {
+    font-size: 25px;
+    font-weight: 600;
+    display: flex;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+    margin-bottom: 8px;
+}
+
+.button a {
+    text-decoration: none !important;
+    background-color: #2F4263;
+    display: inline-block;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 20px;
+    transition: .3s;
+}
+
+.button a:hover {
+    text-decoration: none;
+    background-color: #506B90;
+    color: #fff;
+}
+
+.button a:visited {
+    color: #fff;
+}
+
+#popup {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    padding: 200px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, .30);
+    background: white;
+    visibility: hidden;
+    opacity: 0;
+    transition: .5s;
+    z-index: 101;
+
+}
+
+#popup.active {
+    z-index: 101;
+    top: 50%;
+    visibility: visible;
+    opacity: 1;
+    transition: .5s;
+    pointer-events: auto;
+
+}
+
+#datepicker {
+  padding: 8px 12px;
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px; /* Adjust the width as needed */
+  box-sizing: border-box; /* Ensure padding and border are included in width */
+  position: relative; /* Ensure relative positioning for the parent */
+}
