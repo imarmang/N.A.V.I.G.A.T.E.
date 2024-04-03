@@ -121,11 +121,9 @@ body
     transition-delay: calc(.075s * var(--i));
 }
 
-
 /* ---------------------------------------------------------------------------------------- */
 /* Your calendar and the Make Appointment */
 #blur.active {
-    /*filter: blur(10px);*/
     pointer-events: none;
     user-select: none;
 }
@@ -170,13 +168,14 @@ body
     color: #fff;
 }
 
+/* Popup box to make appointments */
 #popup {
     position: fixed;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px;
-    padding: 200px;
+    width: 500px;
+    height: 300px;
     box-shadow: 0 5px 30px rgba(0, 0, 0, .30);
     background: white;
     visibility: hidden;
@@ -193,15 +192,52 @@ body
     opacity: 1;
     transition: .5s;
     pointer-events: auto;
+}
+
+/* Showing the information about the made appointment */
+.course-info-box {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    width: 300px;
+    height: 200px;
+    border-radius: 6px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, .30);
+    z-index: 150;
+    pointer-events: auto;
 
 }
 
-#datepicker {
-  padding: 8px 12px;
-  border: 1px solid #ccc; /* Border color */
-  border-radius: 4px;
-  font-size: 14px;
-  width: 200px; /* Adjust the width as needed */
-  box-sizing: border-box; /* Ensure padding and border are included in width */
-  position: relative; /* Ensure relative positioning for the parent */
+.firstLine {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.secondLine {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close-link{
+    text-decoration: none !important;
+    background-color: #2F4263;
+    display: inline-block;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 20px;
+    transition: .3s;
+    margin-left: 37%;
+}
+
+.close-link:hover {
+    text-decoration: none;
+    background-color: #506B90;
+    color: #fff;
+}
+
+/* Calendar CSS */

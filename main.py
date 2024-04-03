@@ -46,7 +46,7 @@ def login_successful(username, password):
     # Checks if the username and password match the database
     if student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
         session['n_number'] = student['student_info']['nNumber']
-        #print(session['n_number'])
+        # Print(session['n_number'])
         return True
     else:
         return False
@@ -141,6 +141,7 @@ def create_appointment():
 
         appointment_collection.insert_one(inputDict)
 
+
 # To be used for creating appointments using the calendar.
 @app.route('/get_appointments', methods = ['GET'])
 def calendar():
@@ -155,6 +156,6 @@ def calendar():
     # Returns the appointments list as JSON object
     return jsonify(appointments)
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     app.run(debug=True)

@@ -103,35 +103,34 @@
 
           <div class="input-box">
             <label>
-              <input
-                type="text"
-                class="input-field"
-                placeholder="Type of Appointment"
-                name="username"
-              />
+                <select id="firstDropdown" onchange="showSecondDropdown()">
+                  <option value="Empty">Service Type</option>
+                  <option value="TTC">Tutoring Center</option>
+                  <option value="CAPS">CAPS Appointment</option>
+              </select>
             </label>
           </div>
           <!-- Password input box -->
           <div class="input-box">
             <label>
-              <input
-                type="Course"
-                class="input-field"
-                placeholder="Course Name"
-                name="password"
-              />
+              <select id="secondDropdown" style="display: none">
+                  <option value="Choose">Choose Course</option>
+                  <option value="CSIS 3101">CSIS 3101</option>
+                  <option value="CSIS 3750">CSIS 3750</option>
+              </select>
             </label>
           </div>
           <!-- Calendar day -->
           <div class="input-box">
             <label> <input type="text" id="datepicker" />< </label>
           </div>
+            <div class="button">
+            <a href="#" onclick="toggle()">Close</a>
+          </div>
           <div class="input-box">
             <input type="submit" class="submit" value="Sign In" />
           </div>
-          <div class="button">
-            <a href="#" onclick="toggle()">Close</a>
-          </div>
+
         </form>
       </div>
       <!-- Calendar -->
