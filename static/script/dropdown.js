@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return response.json();
             })
             .then(data => {
-                const containerElement = document.querySelector('.options'); // Assuming this is the container for your divs
+                const containerElement = document.querySelector('.test-container'); // Assuming this is the container for your divs
                 containerElement.innerHTML = '';
                 data.forEach(course => {
                     const div = document.createElement('div');
@@ -161,9 +161,14 @@ document.addEventListener("DOMContentLoaded", function() {
            const allTagsOption = customSelect.querySelector(".option.all-tags");
            const otherSelectedOptions = customSelect.querySelectorAll(".option.active:not(.all-tags)");
 
-           if (otherSelectedOptions.length === 0){
-               allTagsOption.classList.add("active");
-           }
+           if (allTagsOption) {
+                const otherSelectedOptions = customSelect.querySelectorAll(".option.active:not(.all-tags)");
+
+                if (otherSelectedOptions.length === 0){
+                    allTagsOption.classList.add("active");
+                }
+            }
+
            updateSelectedOptions(customSelect);
        }
     });

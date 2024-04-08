@@ -145,11 +145,6 @@ def create_appointment():
     # Retrieving N# from session
     nNumber = session.get('n_number')
 
-    # Checking if user is logged in
-    if nNumber is None:
-        # Redirect to login if user is not logged in
-        return redirect(url_for('student_login'))
-
     # Putting this in here for now
     appointment_collection = database["Appointments"]
 
