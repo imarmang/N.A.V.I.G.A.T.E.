@@ -55,6 +55,9 @@ def student_home():
 
 # Function to handle checking the username and password. Will check the database.
 def login_successful(username, password):
+    # Check if username or password is empty
+    if not username or not password:
+        return False
 
     # Finds the student that matches the username and store the corresponding database table
     student = students_collection.find_one({'student_info.email': username})
@@ -167,15 +170,16 @@ def create_appointment():
 
 # To be used for creating appointments using the calendar.
 @app.route('/get_appointments', methods = ['GET'])
-@check_logged_in
 def calendar():
     appointment_collection = database["Appointments"]
     appointments = []
 
     # Only pull the columns I need from DB.
     for appointment in appointment_collection.find({'nNumber': session['n_number']},
-                                                   {'_id': 0, 'Appointment_date': 1,
-                                                    'Course': 1, 'Subject': 1}):
+                                                   {'_id': 0,
+                                                    'Appointment_date': 1,
+                                                    'Course': 1,
+                                                    'Subject': 1}):
 
         appointments.append(appointment)
 
@@ -188,11 +192,28 @@ def get_courses():
     courses_collection = database["Courses"]
 
     # retrieves all courses
-    courses = courses_collection.find({}, {'_id': 0, 'Course_ID': 1, 'Subject': 1})
+    courses = courses_collection.find({}, {'_id': 0,
+                                           'Course_ID': 1,
+                                           'Subject': 1})
     # creates list of courses formatted as dicts
-    courses_list = [course for course in courses]
+    courses_list = [x for x in courses]
     print(courses_list)
     return jsonify(courses_list)
+
+
+# Used to load student courses in dropdown when making an appointment
+@app.route('/get_student_courses', methods=['GET'])
+def get_student_courses():
+
+    # retrieves all courses for the currently logged in student
+    student_courses = students_collection.find_one({'student_info.nNumber': session['n_number']})['courses']
+
+    # creates list of courses formatted as dicts
+    # I parse through the courses to get the course ID and subject
+    student_courses_list = [{'Course_ID': course.split(' ')[1], 'Subject': course.split(' ')[0]} for course in
+                            student_courses]
+
+    return jsonify(student_courses_list)
 
 
 if __name__ == '__main__':
