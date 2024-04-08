@@ -22,7 +22,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Add event listener to each div
                     div.addEventListener("click", function () {
                         div.classList.toggle("active");
-                        updateSelectedOptions(customSelects);
+                        // For each custom select, call updateSelectedOptions
+                        customSelects.forEach(function(customSelect){
+                            updateSelectedOptions(customSelect);
+                        });
                     });
                     containerElement.appendChild(div);
 
