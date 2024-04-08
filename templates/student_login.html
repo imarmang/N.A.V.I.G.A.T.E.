@@ -1,164 +1,245 @@
 <!-- Login NAVIGATE -->
-{% extends "login_base.html" %} {% block Title %} N.A.V.I.G.A.T.E. {% endblock
-%} {% block body %}
-<div class="wrapper">
-  <!-- Navigation links on the top -->
-  <nav class="nav">
-    <div class="nav-logo">
-      <p class="nav-logo">N.A.V.I.G.A.T.E.</p>
-    </div>
-    <div class="nav-menu" id="navMenu">
-      <ul>
-        <!-- <li><a href="#" class="link active">Home</a></li> -->
-        <li><a href="/" class="link active">Student Home</a></li>
-        <li>
-          <a href="staff_login" class="link">Staff Home</a>
-        </li>
-      </ul>
-    </div>
-    <!-- Log in and sign up buttons -->
-    <!-- Adding the wrapper here -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=REM&display=swap"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <!------------ LINKING THE LOGIN.CSS FILE ---------------->
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/login.css') }}"
+    />
+    <!------------ LINKING THE DROPDOWN.CSS FILE ---------------->
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/dropdown.css') }}"
+    />
 
-    <div class="nav-button">
-      <button class="btn white-btn" id="loginBtn" onclick="login()">
-        Sign In
-      </button>
-      <button class="btn" id="registerBtn" onclick="register()">Sign Up</button>
-    </div>
+    <title>N.A.V.I.G.A.T.E.</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <!-- Navigation links on the top -->
+      <nav class="nav">
+        <div class="nav-logo">
+          <p class="nav-logo">N.A.V.I.G.A.T.E.</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+          <ul>
+            <li><a href="/" class="link active">Student Home</a></li>
+            <li>
+              <a href="staff_login" class="link">Staff Home</a>
+            </li>
+          </ul>
+        </div>
+        <!-- Log in and sign up buttons -->
+        <!-- Adding the wrapper here -->
 
-    <div class="nav-menu-btn">
-      <i class="bx bx-menu" onclick="homeFunction()"></i>
-    </div>
-  </nav>
+        <div class="nav-button">
+          <button class="btn white-btn" id="signInBtn" onclick="signIn()">
+            Sign In
+          </button>
+          <button class="btn" id="signUpBtn" onclick="signUp()">Sign Up</button>
+        </div>
 
-  <!-----------------------------------------Form box ------------------------------------>
-  <div class="boxWrapper">
-    <nav class="form-box">
-      <!------------------------------------- Login Form ------------------------------------>
-      <div class="login-container" id="login">
-        <form action="/" method="post">
-          <div class="top">
-            <span
-              >Don't have an account?
-              <a href="#" onclick="register()">Sign up</a></span
-            >
-            <header>Login</header>
-          </div>
-          <div class="input-box">
-            <label>
-              <input
-                type="text"
-                class="input-field"
-                placeholder="Username"
-                name="username"
-              />
-            </label>
-            <i class="bx bx-user"></i>
-          </div>
-          <div class="input-box">
-            <label>
-              <input
-                type="password"
-                class="input-field"
-                placeholder="Password"
-                name="password"
-              />
-            </label>
-            <i class="bx bx-lock-alt"></i>
+        <div class="nav-menu-btn">
+          <i class="bx bx-menu" onclick="homeFunction()"></i>
+        </div>
+      </nav>
+
+      <!-----------------------------------------Form box ------------------------------------>
+      <div class="boxWrapper">
+        <nav class="form-box">
+          <!------------------------------------- Login Form ------------------------------------>
+          <div class="login-container" id="login">
+            <form action="/" method="post">
+              <div class="top">
+                <span
+                  >Don't have an account?
+                  <a href="#" onclick="signUp()">Sign up</a></span
+                >
+                <header>Login</header>
+              </div>
+              <div class="input-box">
+                <label>
+                  <input
+                    type="text"
+                    class="input-field"
+                    placeholder="Username"
+                    name="username"
+                  />
+                </label>
+                <i class="bx bx-user"></i>
+              </div>
+              <div class="input-box">
+                <label>
+                  <input
+                    type="password"
+                    class="input-field"
+                    placeholder="Password"
+                    name="password"
+                  />
+                </label>
+                <i class="bx bx-lock-alt"></i>
+              </div>
+
+              <div class="input-box">
+                <input type="submit" class="submit" value="Sign In" />
+              </div>
+              <div class="two-col">
+                <div class="two">
+                  <label><a href="#">Forgot your password?</a></label>
+                </div>
+              </div>
+            </form>
           </div>
 
-          <div class="input-box">
-            <input type="submit" class="submit" value="Sign In" />
-          </div>
-          <div class="two-col">
-            <div class="two">
-              <label><a href="#">Forgot your password?</a></label>
+          <!-- Register form -->
+          <div class="register-container" id="register">
+            <!-- {#        <form action="/create_account" method="post">#} -->
+            <div class="top">
+              <span
+                >Have an account? <a href="#" onclick="signIn()">Login</a></span
+              >
+              <header>Sign up</header>
             </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Register form -->
-      <div class="register-container" id="register">
-        <form action="/create_account" method="post">
-          <div class="top">
-            <span
-              >Have an account? <a href="#" onclick="login()">Login</a></span
-            >
-            <header>Sign up</header>
-          </div>
-          <div class="two-forms">
-            <!-- First name input box -->
+            <div class="two-forms">
+              <!-- First name input box -->
+              <div class="input-box">
+                <label>
+                  <input
+                    type="text"
+                    class="registerInputs"
+                    placeholder="Firstname"
+                    name="firstName"
+                  />
+                </label>
+                <i class="bx bx-user"></i>
+              </div>
+              <!-- Last name input box -->
+              <div class="input-box">
+                <label>
+                  <input
+                    type="text"
+                    class="registerInputs"
+                    placeholder="Lastname"
+                    name="lastName"
+                  />
+                </label>
+                <i class="bx bx-user"></i>
+              </div>
+            </div>
+            <!-- N Number input box -->
             <div class="input-box">
               <label>
                 <input
                   type="text"
-                  class="input-field"
-                  placeholder="Firstname"
-                  name="firstName"
+                  class="registerInputs"
+                  placeholder="N Number"
+                  name="nNumber"
                 />
               </label>
-              <i class="bx bx-user"></i>
+              <i class="bx bx-envelope"></i>
             </div>
-            <!-- Last name input box -->
+            <!-- NSU Email input box -->
             <div class="input-box">
               <label>
                 <input
                   type="text"
-                  class="input-field"
-                  placeholder="Lastname"
-                  name="lastName"
+                  class="registerInputs"
+                  placeholder="NSU Email"
+                  name="email"
                 />
               </label>
-              <i class="bx bx-user"></i>
+              <i class="bx bx-envelope"></i>
             </div>
+            <div class="input-box">
+              <label>
+                <input
+                  type="password"
+                  class="registerInputs"
+                  placeholder="Password"
+                  name="password"
+                />
+              </label>
+              <i class="bx bx-lock-alt"></i>
+            </div>
+            <div class="input-box">
+              <button class="btn" id="signUpBtn" onclick="continueBtn()">
+                Continue
+              </button>
+            </div>
+            <div class="two-col"></div>
+            <!-- </form> -->
           </div>
-          <!-- N Number input box -->
-          <div class="input-box">
-            <label>
-              <input
-                type="text"
-                class="input-field"
-                placeholder="N Number"
-                name="nNumber"
-              />
-            </label>
-            <i class="bx bx-envelope"></i>
+          <!------------------------------- ATTENTION ------------------------------------------------------------->
+          <div class="courses-container" id="courses-container">
+            <div class="custom-select">
+              <div class="select-box">
+                <input type="text" class="tags_input" name="tags" hidden />
+                <div class="selected-options"></div>
+                <div class="arrow">
+                  <i class="fa fa-angle-down"></i>
+                </div>
+              </div>
+              <div class="options">
+                <div class="option-search-tags">
+                  <input
+                    type="text"
+                    class="search-tags"
+                    placeholder="Search tags..."
+                  />
+                  <button type="button" class="clear">
+                    <i class="fa fa-close"></i>
+                  </button>
+                </div>
+                <!-- Function to get the information from the database -->
+                <div class="option all-tags" data-value="Empty"></div>
+{#                <div class="option" data-value="Black">Black</div>#}
+{#                <div class="option" data-value="Green">Green</div>#}
+{#                <div class="option" data-value="Navy">Navy</div>#}
+{#                <div class="option" data-value="Orange">Orange</div>#}
+{#                <div class="option" data-value="Pink">Pink</div>#}
+{#                <div class="option" data-value="Red">Red</div>#}
+                <div
+                  class="option"
+                  data-value="no-result-message"
+                  style="display: none"
+                >
+                  No result match
+                </div>
+                <!-- ENDS HERE -->
+              </div>
+              <span class="tag-error-msg error"></span>
+            </div>
+            <input type="button" class="btn_submit" value="Submit" />
           </div>
-          <!-- NSU Email input box -->
-          <div class="input-box">
-            <label>
-              <input
-                type="text"
-                class="input-field"
-                placeholder="NSU Email"
-                name="email"
-              />
-            </label>
-            <i class="bx bx-envelope"></i>
-          </div>
-          <div class="input-box">
-            <label>
-              <input
-                type="password"
-                class="input-field"
-                placeholder="Password"
-                name="password"
-              />
-            </label>
-            <i class="bx bx-lock-alt"></i>
-          </div>
-          <div class="input-box">
-            <input type="submit" class="submit" value="Register" />
-          </div>
-          <div class="two-col"></div>
-        </form>
+          <!--------- DROPDOWN ENDS HERE ---------->
+        </nav>
       </div>
-    </nav>
-  </div>
-</div>
-<script
-  type="text/javascript"
-  src="{{ url_for('static',filename='script/main.js') }}"
-></script>
-{% endblock %}
+    </div>
+    <!-- IMPORTING THE DROPDOWN.JS -->
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/dropdown.js') }}"
+    ></script>
+    <!-- IMPORTING THE MAIN.JS -->
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/main.js') }}"
+    ></script>
+  </body>
+</html>
