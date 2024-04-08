@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
             tagsHTML = '<span class="placeholder">Select the tags</span>';
         } else{
             // If options are selected, show up to 4 tags and the count of additional tags
-            const maxTagsToShow = 4;
+            const maxTagsToShow = 3;
             let additionTagsCount = 0;
 
             selectedOptions.forEach(function(option, index){
@@ -121,13 +121,15 @@ document.addEventListener("DOMContentLoaded", function() {
             const searchTerm = searchInput.value.toLowerCase();
 
             options.forEach(function(option) {
-                const optionText = option.textContent.trim().trim().toLowerCase();
+                const optionText = option.textContent.trim().toLowerCase();
                 const shouldShow = optionText.includes(searchTerm);
                 option.style.display = shouldShow ? "block" : "none";
             });
 
             const anyOptionsMatch = Array.from(options).some(option => option.style.display === "block");
-            noResultMessage.style.display = anyOptionsMatch ? "none": "block";
+            if (noResultMessage) {
+                noResultMessage.style.display = anyOptionsMatch ? "none" : "block";
+            }
 
             if (searchTerm){
             optionsContainer.classList.add("option-search-active")
@@ -204,7 +206,10 @@ document.addEventListener("DOMContentLoaded", function() {
             customSelect.querySelectorAll(".option.active").forEach(function(option){
                 option.classList.remove("active");
             });
-            customSelect.querySelector(".option.all-tags").classList.remove("active");
+            const allTagsOption = customSelect.querySelector(".option.all-tags");
+            if (allTagsOption) {
+                allTagsOption.classList.remove("active");
+            }
             updateSelectedOptions(customSelect);
         });
     }
@@ -213,6 +218,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const submitButton = document.querySelector(".btn_submit");
     submitButton.addEventListener("click", function(){
         let valid = true;
+
+        // Dictionary to return through JSON response
+        let ret_dict = {"user_info": []};
+
+        // Populating return dictionary with user info
+        ret_dict["user_info"].push(document.querySelector("#firstName").value);
+        ret_dict["user_info"].push(document.querySelector("#lastName").value);
+        ret_dict["user_info"].push(document.querySelector("#nNumber").value);
+        ret_dict["user_info"].push(document.querySelector("#email").value);
+        ret_dict["user_info"].push(document.querySelector("#password").value);
+
+        let tags = document.querySelector(".tags_input").value;
+
+        ret_dict["courses"] = tags.split(', ')
 
         customSelects.forEach(function(customSelect){
             const selectedOptions = customSelect.querySelectorAll(".option.active");
@@ -227,14 +246,40 @@ document.addEventListener("DOMContentLoaded", function() {
                 tagErrorMsg.textContent = "";
                 tagErrorMsg.style.display = "none";
             }
+
         });
 
         if (valid){
-            let tags = document.querySelector(".tags_input").value;
-            alert(tags);
+            console.log(ret_dict)
+            sendSelectedOptionsToServer(ret_dict);
+            //alert(tags);
             resetCustomSelects();
         }
     });
 });
 
 
+function sendSelectedOptionsToServer(selectedOptions) {
+    fetch('/create_account', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(selectedOptions)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to send selected options to server');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === 'Account created successfully') {
+                // Redirect to the logged in page
+                window.location.href = '/';
+            }
+        })
+    .catch(error => {
+        console.error(error);
+    });
+}

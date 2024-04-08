@@ -77,13 +77,16 @@ def logout():
     return redirect(url_for('student_login'))
 
 # Flask Route to handle account creation
-@app.route('/create_account', methods = ['POST'])
+@app.route('/create_account', methods = ['POST', 'GET'])
 def create_account():
+
     # If structure to determine if POST was used
     if request.method == 'POST':
 
+        userInfoRequest = request.json
+
         # I request the email up here to check if it is already in use
-        email = request.form['email']
+        email = userInfoRequest['user_info'][3]
 
         # Determine if email is already in use
         # TODO let user know it is already in use
@@ -92,21 +95,25 @@ def create_account():
 
         # Only add user if email is unique
         else:
+
             # Get information from the inputs in the HTML page
-            firstName = request.form['firstName']
-            lastName = request.form['lastName']
-            password = request.form['password']
-            nNumber = request.form['nNumber']
+            firstName = userInfoRequest['user_info'][0]
+            lastName = userInfoRequest['user_info'][1]
+            password = userInfoRequest['user_info'][4]
+            nNumber = userInfoRequest['user_info'][2]
+
+            student_courses = userInfoRequest['courses']
 
             # Encrypt password before sending it into the database
             pw_hash = generate_password_hash(password).decode('utf-8')
 
             # Input information into database by wrapping it in a dictionary
-            inputDict = {'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'N#': nNumber}}
+            inputDict = {'courses': student_courses, 'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'nNumber': nNumber}}
 
             students_collection.insert_one(inputDict)
 
-            return render_template('student_login.html')
+            # Redirect to the logged in page after account creation on front-end because it expects JSON response
+            return jsonify({'message': 'Account created successfully'}), 200
 
 
 # Function to check if email is already used
@@ -192,7 +199,6 @@ def get_courses():
                                            'Subject': 1})
     # creates list of courses formatted as dicts
     courses_list = [x for x in courses]
-    print(courses_list)
     return jsonify(courses_list)
 
 
@@ -209,6 +215,16 @@ def get_student_courses():
                             student_courses]
 
     return jsonify(student_courses_list)
+
+
+# Used to load student courses from dropdown menu into DB (Saving here as route to use for modifying courses later)
+@app.route('/store_selected_courses', methods=['POST'])
+def store_selected_courses(nNumber):
+    selected_courses = request.json['selected_courses']
+
+    # Needed to store the selected courses in the student's database
+    students_collection.update_one({'student_info.nNumber': nNumber},
+                                   {'$set': {'courses': selected_courses}})
 
 
 if __name__ == '__main__':

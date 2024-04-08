@@ -125,6 +125,7 @@
                     class="registerInputs"
                     placeholder="Firstname"
                     name="firstName"
+                    id="firstName"
                   />
                 </label>
                 <i class="bx bx-user"></i>
@@ -137,6 +138,7 @@
                     class="registerInputs"
                     placeholder="Lastname"
                     name="lastName"
+                    id="lastName"
                   />
                 </label>
                 <i class="bx bx-user"></i>
@@ -150,6 +152,7 @@
                   class="registerInputs"
                   placeholder="N Number"
                   name="nNumber"
+                  id="nNumber"
                 />
               </label>
               <i class="bx bx-envelope"></i>
@@ -162,6 +165,7 @@
                   class="registerInputs"
                   placeholder="NSU Email"
                   name="email"
+                  id="email"
                 />
               </label>
               <i class="bx bx-envelope"></i>
@@ -173,6 +177,7 @@
                   class="registerInputs"
                   placeholder="Password"
                   name="password"
+                  id="password"
                 />
               </label>
               <i class="bx bx-lock-alt"></i>
@@ -208,7 +213,7 @@
                 </div>
                 <!-- Function to get the information from the database -->
                 <div class = "test-container">
-                <div class="option all-tags" data-value="Empty">Select</div>
+                <div class="option all-tags" data-value="Empty"></div>
 <!--{#                <div class="option" data-value="Black">Black</div>#}-->
 <!--{#                <div class="option" data-value="Green">Green</div>#}-->
 <!--{#                <div class="option" data-value="Navy">Navy</div>#}-->
@@ -226,7 +231,9 @@
               </div>
               <span class="tag-error-msg error"></span>
             </div>
-            <input type="button" class="btn_submit" value="Submit" />
+            <button class="btn_submit">
+                Register
+              </button>
           </div>
           <!--------- DROPDOWN ENDS HERE ---------->
         </nav>
