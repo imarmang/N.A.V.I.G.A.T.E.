@@ -12,27 +12,20 @@ toggleBtn.addEventListener('click', () => {
 });
 
 function toggle(){
-    var blur = document.getElementById('blur');
-    var popup = document.getElementById('popup');
+    let blur = document.getElementById('blur');
+    let popup = document.getElementById('popup');
 
     toggleClass(blur, 'active');
     toggleClass(popup, 'active');
 }
 
-// Appear only if the Tutoring is chosen in the #popup
-function showSecondDropdown(){
-    var firstDropdown = document.getElementById("firstDropdown");
-    var secondDropdown = document.getElementById("secondDropdown");
-
-    secondDropdown.style.display = firstDropdown.value === "TTC" ? "block" : "none";
-}
-
 // This method shows the appointment information
 function showCourseInfo(courseInfo) {
-    var infoBox = $('<div class="course-info-box">' +
+    let infoBox = $('<div class="course-info-box">' +
                         '<p class="firstLine"> Appointment Details </p>'+
                         '<p class="secondLine">' + courseInfo + '</p>' +
-                        '<a href="#" class="close-link">Close</a>' +
+                        '<a href="#" class="appInfo-button">Close</a>' +
+                        '<a href="#" class="appInfo-button">Delete</a>' +
                   '</div>');
     $('body').append(infoBox);
     infoBox.fadeIn();
@@ -44,9 +37,15 @@ function showCourseInfo(courseInfo) {
     });
 }
 
-$(document).ready(function() {
-    $('#firstDropdown').change(function() {
-        var serviceType = $(this).val();
+document.addEventListener('DOMContentLoaded', function() {
+    let firstDropdown = document.getElementById('firstDropdown');
+    let secondDropdown = document.getElementById('secondDropdown');
+    let datePicker = document.getElementById('datePicker');
+    let thirdDropdown = document.getElementById('thirdDropdown');
+    let forthDropdown = document.getElementById('forthDropdown');
+
+    firstDropdown.addEventListener('change', function() {
+        let serviceType = this.value;
         if (serviceType === 'TTC') {
             fetch('/get_student_courses')
                 .then(response => {
@@ -56,11 +55,18 @@ $(document).ready(function() {
                     return response.json();
                 })
                 .then(data => {
-                    var secondDropdown = $('#secondDropdown');
-                    secondDropdown.empty();
-                    secondDropdown.show();
+                    secondDropdown.innerHTML = '';
+                    secondDropdown.style.display = 'block'; // equivalent to jQuery's .show()
+                    // Create a default option
+                    let chooseOption = document.createElement('option');
+                    chooseOption.text = "Choose a course";
+                    secondDropdown.appendChild(chooseOption);
+
                     data.forEach(course => {
-                        secondDropdown.append('<option value="' + course.Course_ID + '">' + course.Subject + ' ' + course.Course_ID + '</option>');
+                        let option = document.createElement('option');
+                        option.value = course.Course_ID;
+                        option.text = course.Subject + ' ' + course.Course_ID;
+                        secondDropdown.appendChild(option);
                     });
                 })
                 .catch(error => {
@@ -69,7 +75,33 @@ $(document).ready(function() {
                     alert('Failed to load student courses. Please try again later.');
                 });
         } else {
-            $('#secondDropdown').hide();
+            secondDropdown.style.display = 'none';
+            datePicker.style.display = 'none';
+            thirdDropdown.style.display = 'none';
         }
+    });
+    // Checking if the user chose the courses
+    secondDropdown.addEventListener('change', function() {
+        if (this.value !== 'Choose a course') {
+            // Initialize the datePicker here
+            datePicker.style.display = 'block';
+            flatpickr(datePicker, {
+                dateFormat: "m-d-y",
+                onChange: function(selectedDates, dateStr) {
+                    console.log("Date selected: ", dateStr);
+                }
+            });
+        }else{
+            datePicker.style.display = 'none';
+        }
+
+     });
+    // Checking if the user chose a date
+    datePicker.addEventListener('input', function() {
+        thirdDropdown.style.display = this.value !== "" ? 'block' : 'none';
+    });
+
+    thirdDropdown.addEventListener('change', function() {
+        forthDropdown.style.display = this.value !== 'Choose a time' ? 'block' : 'none';
     });
 });

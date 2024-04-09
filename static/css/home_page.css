@@ -194,6 +194,39 @@ body
     pointer-events: auto;
 }
 
+/* Create an appointment */
+h3 {
+    margin-left: 160px;
+    margin-top: 20px;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 160px;
+}
+
+#firstDropdown, #secondDropdown, #thirdDropdown, #datePicker, #forthDropdown {
+    width: 200px;
+    border-radius: 6px;
+    border: 1px solid #2F4263;
+    padding: 3px;
+    font-weight: normal;
+    text-align: center;
+}
+
+
+.two-buttons {
+    display: flex;
+    justify-content: space-between;
+    position: absolute; /* Change from 'fixed' to 'absolute' */
+    bottom: 10px; /* Adjust as needed */
+    left: 50%; /* Center the buttons horizontally */
+    transform: translateX(-50%); /* Center the buttons horizontally */
+}
+
+
 /* Showing the information about the made appointment */
 .course-info-box {
     position: fixed;
@@ -222,7 +255,7 @@ body
     align-items: center;
 }
 
-.close-link{
+.appInfo-button{
     text-decoration: none !important;
     background-color: #2F4263;
     display: inline-block;
@@ -232,12 +265,14 @@ body
     padding: 10px 20px;
     transition: .3s;
     margin-left: 37%;
+    justify-content: space-between;
 }
 
-.close-link:hover {
+.appInfo-button:hover {
     text-decoration: none;
     background-color: #506B90;
     color: #fff;
 }
+
 
 /* Calendar CSS */

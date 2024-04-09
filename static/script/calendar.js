@@ -32,8 +32,5 @@ $(document).ready(function() {
                 .catch(error => {
                     console.error('Error fetching appointments:', error);
                 });
-            // Initialize the datepicker
-            $('#datepicker').datepicker();
-
 });
 
