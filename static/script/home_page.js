@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     data.forEach(course => {
                         let option = document.createElement('option');
-                        option.value = course.Course_ID;
+                        option.value = course.Subject + ' ' + course.Course_ID;
                         option.text = course.Subject + ' ' + course.Course_ID;
                         secondDropdown.appendChild(option);
                     });
