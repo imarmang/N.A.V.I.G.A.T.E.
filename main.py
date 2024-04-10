@@ -379,7 +379,7 @@ def get_subject_availability_at_specific_time():
 
 
 # This route is the same as get_subject_availability_at_specific_time but without the specific time
-@app.route('/get_subject_availability', methods=['POST'])
+@app.route('/get_subject_availability', methods=['GET'])
 def get_subject_availability():
     # Get the specific day and subject from the JSON request
     data = request.json
