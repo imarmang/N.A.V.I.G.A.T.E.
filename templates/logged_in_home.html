@@ -21,6 +21,8 @@
     />
 
     <title>Home</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
 
     <!-- Importing jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -87,7 +89,7 @@
         </li>
         <li class="list-item">
           {# This is the logout button #}
-          <a href="#">
+          <a href="{{ url_for('logout') }}">
             <i class="bx bx-log-out"></i>
             <span class="link-name" style="--i: 5">Logout</span>
           </a>
@@ -105,7 +107,7 @@
       </div>
       <!-- Appears after clicking the button -->
       <div id="popup">
-        <form action="/" method="post">
+         <form action="/create_appointment" method="post">
           <h3>Create an Event</h3>
 
           <div class="dropdown-container">
@@ -130,18 +132,14 @@
 
               <!-- Choose your tutor based on the calendar -->
               <label>
-                <select id="thirdDropdown" style="display: none">
-                  <option value="Choose">Choose Your Tutor</option>
-                  <option value="Brandon">Brandon</option>
-                  <option value="Carlos">Carlos</option>
-                </select>
+                <select id="thirdDropdown" style="display: none"></select>
               </label>
 
               <!--Choose the time slot -->
 
               <label>
                 <select id="forthDropdown" style="display: none">
-                  <option value="Choose">Choose Your Tutor</option>
+                  <option>Choose Your Timeslot</option>
                   <option value="2PM-3PM">2PM-3PM</option>
                   <option value="4PM-5PM">4PM-5PM</option>
                 </select>

@@ -25,8 +25,7 @@ $(document).ready(function() {
                 events: appointments.map(appointment => ({
                     title: appointment.Subject + ' - ' + appointment.Course,
                     start: appointment.Appointment_date,
-
-                }))
+                    }))
                 });
             })
                 .catch(error => {

@@ -24,18 +24,48 @@ function showCourseInfo(courseInfo) {
     let infoBox = $('<div class="course-info-box">' +
                         '<p class="firstLine"> Appointment Details </p>'+
                         '<p class="secondLine">' + courseInfo + '</p>' +
+                        '<div class="two-buttons">' +
                         '<a href="#" class="appInfo-button">Close</a>' +
-                        '<a href="#" class="appInfo-button">Delete</a>' +
+                        '<a href="#" class="deleteApp-button">Delete</a>' +
+                        '</div>'+
                   '</div>');
     $('body').append(infoBox);
     infoBox.fadeIn();
 
-    infoBox.find('.close-link').on('click', function() {
+    infoBox.find('.appInfo-button').on('click', function() {
         infoBox.fadeOut(function() {
             $(this).remove();
         });
     });
 }
+
+// This function calls the delete_appointment route to delete the appointment from the DB which would be reflected on the front end calendar
+// Assuming the delete button has a class name of 'deleteApp-button'
+let deleteButtons = document.querySelectorAll('.deleteApp-button');
+
+deleteButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        // Assuming the appointment date and time are stored as data attributes on the button
+        let appointmentDate = this.dataset.date;
+        let appointmentTime = this.dataset.time;
+
+        fetch('/delete_appointment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([appointmentTime, appointmentDate]),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            // You can add code here to remove the appointment from the calendar or update the UI in some other way
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     let firstDropdown = document.getElementById('firstDropdown');
@@ -78,6 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
             secondDropdown.style.display = 'none';
             datePicker.style.display = 'none';
             thirdDropdown.style.display = 'none';
+            forthDropdown.style.display = 'none';
+
+            secondDropdown.value = '';
+            datePicker.value = '';
+            thirdDropdown.value = '';
+            forthDropdown.value = '';
         }
     });
     // Checking if the user chose the courses
@@ -93,15 +129,80 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }else{
             datePicker.style.display = 'none';
+            thirdDropdown.style.display = 'none';
+            forthDropdown.style.display = 'none';
+
+            datePicker.value = '';
+            thirdDropdown.value = '';
+            forthDropdown.value = '';
         }
 
      });
-    // Checking if the user chose a date
+
+    // Checking if the chosen date is valid
     datePicker.addEventListener('input', function() {
-        thirdDropdown.style.display = this.value !== "" ? 'block' : 'none';
+        if (this.value !== "") {
+            // Make a POST request to the /get_subject_availability endpoint
+            fetch('/get_subject_availability', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Creating the JSON based on how Brandon asked it to look like
+                body: JSON.stringify({
+                    day: this.value,
+                    subject: secondDropdown.value
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Clear the thirdDropdown
+                thirdDropdown.innerHTML = '';
+                // Create a default option
+                let chooseOption = document.createElement('option');
+                chooseOption.value = "Choose your tutor";
+                chooseOption.text = "Choose your tutor";
+                thirdDropdown.appendChild(chooseOption);
+                // Populate the thirdDropdown with the names of the tutors
+                data.forEach(tutor => {
+                    let option = document.createElement('option');
+                    option.value = tutor.tutor_name;
+                    option.text = tutor.tutor_name;
+                    thirdDropdown.appendChild(option);
+                });
+
+                // Show the thirdDropdown
+                thirdDropdown.style.display = 'block';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        } else {
+            thirdDropdown.style.display = 'none';
+            forthDropdown.style.display = 'none';
+        }
     });
 
     thirdDropdown.addEventListener('change', function() {
-        forthDropdown.style.display = this.value !== 'Choose a time' ? 'block' : 'none';
+        if (this.value !== "Choose your tutor") {
+            // Find the selected tutor from the previously fetched data
+            let selectedTutor = data.find(tutor => tutor.tutor_name === this.value);
+
+            // Clear the forthDropdown
+            forthDropdown.innerHTML = '';
+
+            // Populate the forthDropdown with the available times of the selected tutor
+            selectedTutor.tutor_times.forEach(time => {
+                let option = document.createElement('option');
+                option.value = time;
+                option.text = time;
+                forthDropdown.appendChild(option);
+            });
+
+            // Show the forthDropdown
+            forthDropdown.style.display = 'block';
+        } else {
+            forthDropdown.style.display = 'none';
+        }
     });
 });

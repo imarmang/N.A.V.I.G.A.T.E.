@@ -274,5 +274,23 @@ h3 {
     color: #fff;
 }
 
+.deleteApp-button{
+    text-decoration: none !important;
+    background-color: #2F4263;
+    display: inline-block;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 20px;
+    transition: .3s;
+    margin-left: 37%;
+    justify-content: space-between;
+}
+
+.deleteApp-button:hover {
+    text-decoration: none;
+    background-color: #506B90;
+    color: #fff;
+}
 
 /* Calendar CSS */
