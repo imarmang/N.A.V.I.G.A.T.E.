@@ -144,9 +144,13 @@ def logged_in_home():
 @app.route('/fetch_tutor_info')
 @check_logged_in
 def fetch_tutor_info():
-    tutor_info = staff_collection.find_one({'student_info'})
 
-    return render_template('logged_in_home.html', tutor_info=tutor_info)
+    # Get JSON from front-end to get tutor's email (Could also be in form)
+    email = request.json['email']
+
+    tutor_info = staff_collection.find_one({email})
+
+    return jsonify(tutor_info)
 
 
 @app.route('/create_appointment', methods = ['GET', 'POST'])
@@ -305,7 +309,7 @@ def delete_appointment():
 
 # Returns availability of all tutors and time for a specific subject on a specific date and specific time to front-end
 # Format is: [{"tutor_name": "Brandon DeCelle", "tutor_times": ["09:00", "10:00", "11:00"]}, {"tutor_name": "Carlos Acacio", "tutor_times": ["13:00", "14:00", "15:00"]}
-@app.route('/get_subject_availability_at_specific_time', methods=['POST'])
+@app.route('/get_subject_availability_at_specific_time', methods=['GET'])
 def get_subject_availability_at_specific_time():
 
     # Get the specific day and subject from the JSON request
@@ -316,7 +320,7 @@ def get_subject_availability_at_specific_time():
     specific_time = data['time']
 
     # Convert the date string to a datetime object and get the day of the week
-    date_object = datetime.strptime(specific_date, "%m %d %Y")
+    date_object = datetime.strptime(specific_date, "%m-%d-%y")
     specific_day = date_object.strftime("%A")
 
     # Get the appointment collection
@@ -379,12 +383,23 @@ def get_subject_availability_at_specific_time():
 
 
 # This route is the same as get_subject_availability_at_specific_time but without the specific time
-@app.route('/get_subject_availability', methods=['GET'])
+@app.route('/get_subject_availability', methods=['POST', 'GET'])
 def get_subject_availability():
     # Get the specific day and subject from the JSON request
+    # JSON response should be in the form of {"subject": "CSIS 2101", "day": "mm-dd-yyyy"}
     data = request.json
     specific_subject = data['subject']
-    specific_day = data['day']
+    specific_date = data['day']
+
+    # Print the data received from the front-end
+    print(f"Received data: {data}")
+
+    # Convert the date string to a datetime object and get the day of the week
+    date_object = datetime.strptime(specific_date, "%m-%d-%y")
+    specific_day = date_object.strftime("%A")
+
+    # Print the specific day
+    print(f"Specific day: {specific_day}")
 
     # Get the appointment collection
     appointment_collection = database["Appointments"]
@@ -396,6 +411,9 @@ def get_subject_availability():
     tutor_availability = []
 
     for tutor in tutors:
+        # Print the tutor being checked
+        print(f"Checking tutor: {tutor['first_name']} {tutor['last_name']}")
+
         # Check if the tutor teaches the specific subject
         if specific_subject in tutor['Courses']:
             # Initialize an empty list to store the times for this tutor
@@ -403,10 +421,16 @@ def get_subject_availability():
 
             # For each day in the tutor's availability
             for day, times in tutor['Availability'].items():
+                # Print the day being checked
+                print(f"Checking day: {day}")
+
                 # Check if the day matches the specific day
                 if day == specific_day:
                     # For each time slot on this day
                     for time_slot in times['time_slots']:
+                        # Print the time slot being checked
+                        print(f"Checking time slot: {time_slot['start_time']}")
+
                         # Check if an appointment for this time and tutor already exists
                         existing_appointment = appointment_collection.find_one({
                             'Appointment_date': specific_day,
@@ -425,10 +449,17 @@ def get_subject_availability():
                     'tutor_times': tutor_times
                 })
 
-    print(tutor_availability)
+    # Print the tutor availability
+    print(f"Tutor availability: {tutor_availability}")
 
     # Return the tutor availability as a JSON response
     return jsonify(tutor_availability)
+
+
+# Route to allow staff with elevated access to modify tutor availability
+@app.route('/modify_tutor_availability', methods=['POST'])
+def modify_tutor_availability():
+    pass
 
 
 if __name__ == '__main__':
