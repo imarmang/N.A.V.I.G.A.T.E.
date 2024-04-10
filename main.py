@@ -49,7 +49,6 @@ def student_home():
 
         # If the credentials are good, then go to logged in page. Else, do nothing for now
         if login_successful(username, password):
-            get_subject_availability()
             return redirect(url_for('logged_in_home'))
         else:
             pass
