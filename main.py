@@ -452,6 +452,9 @@ def get_subject_availability():
     # Print the tutor availability
     print(f"Tutor availability: {tutor_availability}")
 
+    if len(tutor_availability) == 0:
+        tutor_availability.append("None available")
+
     # Return the tutor availability as a JSON response
     return jsonify(tutor_availability)
 
