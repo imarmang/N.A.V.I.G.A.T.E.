@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let secondDropdown = document.getElementById('secondDropdown');
     let datePicker = document.getElementById('datePicker');
     let thirdDropdown = document.getElementById('thirdDropdown');
-    let forthDropdown = document.getElementById('forthDropdown');
+    let fourthDropdown = document.getElementById('fourthDropdown');
 
     firstDropdown.addEventListener('change', function() {
         let serviceType = this.value;
@@ -108,12 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
             secondDropdown.style.display = 'none';
             datePicker.style.display = 'none';
             thirdDropdown.style.display = 'none';
-            forthDropdown.style.display = 'none';
+            fourthDropdown.style.display = 'none';
 
             secondDropdown.value = '';
             datePicker.value = '';
             thirdDropdown.value = '';
-            forthDropdown.value = '';
+            fourthDropdown.value = '';
         }
     });
     // Checking if the user chose the courses
@@ -130,18 +130,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }else{
             datePicker.style.display = 'none';
             thirdDropdown.style.display = 'none';
-            forthDropdown.style.display = 'none';
+            fourthDropdown.style.display = 'none';
 
+            // Clearing all the values if we switch back to the Service Type
             datePicker.value = '';
             thirdDropdown.value = '';
-            forthDropdown.value = '';
+            fourthDropdown.value = '';
         }
 
      });
 
+    let globalData = null;
+
     // Checking if the chosen date is valid
     datePicker.addEventListener('input', function() {
-        if (this.value !== "") {
+        if (datePicker.value !== "") {
             // Make a POST request to the /get_subject_availability endpoint
             fetch('/get_subject_availability', {
                 method: 'POST',
@@ -156,19 +159,39 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+
+                globalData = data;  // Making this variable global for the thirdDropdown to access
                 // Clear the thirdDropdown
                 thirdDropdown.innerHTML = '';
-                // Create a default option
-                let chooseOption = document.createElement('option');
-                chooseOption.value = "Choose your tutor";
-                chooseOption.text = "Choose your tutor";
-                thirdDropdown.appendChild(chooseOption);
+                let count = 0;
                 // Populate the thirdDropdown with the names of the tutors
                 data.forEach(tutor => {
+                if (tutor === "None available") {
+                    let noOption = document.createElement('option');
+                    noOption.value = "None available";
+                    noOption.text = "None available";
+                    thirdDropdown.appendChild(noOption);
+                    // Clear the fourthDropdown
+                    fourthDropdown.style.display = 'none';
+                    fourthDropdown.value = '';
+                    fourthDropdown.text = '';
+                    count = 0;  // Reset the count
+
+                } else {
+                    // Create a default option
                     let option = document.createElement('option');
-                    option.value = tutor.tutor_name;
+                    if (count === 0){
+                        let chooseOption = document.createElement('option');
+                        chooseOption.value = "Choose your tutor";
+                        chooseOption.text = "Choose your tutor";
+                        thirdDropdown.appendChild(chooseOption);
+                        count++;
+                    }
+                    // Create the rest of the dropdown
                     option.text = tutor.tutor_name;
+                    option.value = tutor.tutor_name;
                     thirdDropdown.appendChild(option);
+                }
                 });
 
                 // Show the thirdDropdown
@@ -179,30 +202,34 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             thirdDropdown.style.display = 'none';
-            forthDropdown.style.display = 'none';
+            fourthDropdown.style.display = 'none';
         }
     });
 
     thirdDropdown.addEventListener('change', function() {
-        if (this.value !== "Choose your tutor") {
+        if (thirdDropdown.value !== "Choose your tutor") {
             // Find the selected tutor from the previously fetched data
-            let selectedTutor = data.find(tutor => tutor.tutor_name === this.value);
+            let selectedTutor = globalData.find(tutor => tutor.tutor_name === thirdDropdown.value);
 
-            // Clear the forthDropdown
-            forthDropdown.innerHTML = '';
+            // Clear the fourthDropdown
+            fourthDropdown.innerHTML = '';
 
-            // Populate the forthDropdown with the available times of the selected tutor
+            let chooseOption = document.createElement('option');
+            chooseOption.value = "Choose a timeslot";
+            chooseOption.text = "Choose a timeslot";
+            fourthDropdown.appendChild(chooseOption);
+            // Populate the fourthDropdown with the available times of the selected tutor
             selectedTutor.tutor_times.forEach(time => {
                 let option = document.createElement('option');
                 option.value = time;
                 option.text = time;
-                forthDropdown.appendChild(option);
+                fourthDropdown.appendChild(option);
             });
 
-            // Show the forthDropdown
-            forthDropdown.style.display = 'block';
+            // Show the fourthDropdown
+            fourthDropdown.style.display = 'block';
         } else {
-            forthDropdown.style.display = 'none';
+            fourthDropdown.style.display = 'none';
         }
     });
 });
