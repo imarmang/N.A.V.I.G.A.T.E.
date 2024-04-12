@@ -1,64 +1,29 @@
+// This is a check value to see if the courses have already been populated
+let coursesPopulated = false;
+// Options is a NodeList that will be keeping all the courses that were created dynamically in the populateCourses function
+let options = null;
 // Event listener for when the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", function() {
 
      // Select all elements with the class "custom-select"
     const customSelects = document.querySelectorAll(".custom-select");
-    function populateCourses() {
-        fetch('/courses', {method: 'GET'})
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to retrieve courses data');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const containerElement = document.querySelector('.test-container'); // Assuming this is the container for your divs
-                containerElement.innerHTML = '';
-                data.forEach(course => {
-                    const div = document.createElement('div');
-                    div.classList.add('option');
-                    div.setAttribute('data-value', course.Subject + " " + course.Course_ID);
-                    div.textContent = course.Subject + " " + course.Course_ID;
-                    // Add event listener to each div
-                    div.addEventListener("click", function () {
-                        div.classList.toggle("active");
-                        // For each custom select, call updateSelectedOptions
-                        customSelects.forEach(function(customSelect){
-                            updateSelectedOptions(customSelect);
-                        });
-                    });
-                    containerElement.appendChild(div);
-
-                });
-            })
-            .catch(error => {
-                console.error(error);
-                // Display an error message to the user
-                alert('Failed to load courses. Please try again later.');
-            });
-    }
 
     // Function to update selected options
     function updateSelectedOptions(customSelect){
-        console.log('updateSelectedOptions function is called'); // Add this line
 
        // Get all active options that are not "all-tags"
-        const selectedOptions = Array.from(customSelect.querySelectorAll(".option.active")).filter(option =>
-        option !== customSelect.querySelector(".option.all-tags")).map(function(option){
+        const selectedOptions = Array.from(customSelect.querySelectorAll(".option.active")).map(function(option){
             return {
                 value: option.getAttribute("data-value"),
                 text: option.textContent.trim()
             };
         });
-
-         // Get the values of the selected options
-        const selectedValues = selectedOptions.map(function
-        (option){
-            return option.value;
-        });
+         if (!coursesPopulated){
+             populateCourses(customSelect);
+         }
 
         // Set the value of the hidden input to the selected values
-        customSelect.querySelector(".tags_input").value = selectedValues.join(', ');
+        customSelect.querySelector(".tags_input").value = selectedOptions.join(', ');
 
         let tagsHTML = "";
 
@@ -89,41 +54,72 @@ document.addEventListener("DOMContentLoaded", function() {
         innerHTML = tagsHTML;
     }
 
+    function populateCourses(customSelect) {
+        fetch('/courses', {method: 'GET'})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to retrieve courses data');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const containerElement = document.querySelector('.test-container'); // Assuming this is the container for your divs
+                containerElement.innerHTML = '';
+                data.forEach(course => {
+                    const div = document.createElement('div');
+                    div.classList.add('option');
+                    div.setAttribute('data-value', course.Subject + " " + course.Course_ID);
+                    div.textContent = course.Subject + " " + course.Course_ID;
+                    // Add event listener to each div
+                    div.addEventListener("click", function () {
+                        div.classList.toggle("active");
+                        // For each custom select, call updateSelectedOptions
+                        customSelects.forEach(function(customSelect){
+                            updateSelectedOptions(customSelect);
+                        });
+                    });
+                    containerElement.appendChild(div);
+
+                });
+                coursesPopulated = true;  // Checking if the courses are populated
+
+                // Select all elements with the class "option" within the customSelect element
+                options = customSelect.querySelectorAll(".option");
+
+            })
+            .catch(error => {
+                console.error(error);
+                // Display an error message to the user
+                alert('Failed to load courses. Please try again later.');
+            });
+    }
+
     // For each custom select, add event listeners and functionality
     customSelects.forEach(function(customSelect){
         const searchInput = customSelect.querySelector(".search-tags");
         const optionsContainer = customSelect.querySelector(".options");
         const noResultMessage = customSelect.querySelector(".no-result-message");
-        const options = customSelect.querySelectorAll(".option");
-        const allTagsOption = customSelect.querySelector(".option.all-tags");
+        // const options = customSelect.querySelectorAll(".option");
         const clearButton = customSelect.querySelector(".clear");
 
-        allTagsOption.addEventListener("click", function(){
-            const isActive = allTagsOption.classList.contains("active");
-
-            options.forEach(function(option){
-                if(option !== allTagsOption){
-                    option.classList.toggle("active", !isActive)
-                }
-            });
-
-            updateSelectedOptions(customSelect);
-        });
         clearButton.addEventListener("click", function(){
             searchInput.value = "";
             options.forEach(function(option){
                 option.style.display = "block";
             });
-            noResultMessage.style.display = "none";
+            if (noResultMessage) {
+                noResultMessage.style.display = "none";
+            }
         });
 
         searchInput.addEventListener("input", function(){
-            const searchTerm = searchInput.value.toLowerCase();
+            const searchTerm = searchInput.value.trim().toLowerCase();
 
             options.forEach(function(option) {
                 const optionText = option.textContent.trim().toLowerCase();
                 const shouldShow = optionText.includes(searchTerm);
                 option.style.display = shouldShow ? "block" : "none";
+
             });
 
             const anyOptionsMatch = Array.from(options).some(option => option.style.display === "block");
@@ -132,8 +128,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             if (searchTerm){
-            optionsContainer.classList.add("option-search-active")
-            }else{
+                optionsContainer.classList.add("option-search-active")
+            } else {
                 optionsContainer.classList.remove("option-search-active");
             }
         });
@@ -143,7 +139,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const options = customSelect.querySelectorAll(".option");
         options.forEach(function (option){
            option.addEventListener("click", function(){
-               console.log('Option is clicked'); // Add this line
                option.classList.toggle("active");
                updateSelectedOptions(customSelect);
            });
@@ -153,40 +148,20 @@ document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("click", function(event){
        const removeTag = event.target.closest(".remove-tag");
        if (removeTag){
-                  console.log('Remove tag is clicked'); // Add this line
-
            const customSelect = removeTag.closest(".custom-select");
            const valueToRemove = removeTag.getAttribute("data-value");
            const optionToRemove = customSelect.querySelector(".option[data-value='"+valueToRemove+"']");
            optionToRemove.classList.remove("active");
-
-           const allTagsOption = customSelect.querySelector(".option.all-tags");
-           const otherSelectedOptions = customSelect.querySelectorAll(".option.active:not(.all-tags)");
-
-           if (allTagsOption) {
-                const otherSelectedOptions = customSelect.querySelectorAll(".option.active:not(.all-tags)");
-
-                if (otherSelectedOptions.length === 0){
-                    allTagsOption.classList.add("active");
-                }
-            }
 
            updateSelectedOptions(customSelect);
        }
     });
 
     const selectBoxes = document.querySelectorAll(".select-box");
-    let coursesPopulated = false;
 
     selectBoxes.forEach(function(selectBox ){
        selectBox.addEventListener("click", function(event){
            if(!event.target.closest(".tag")){
-               const coursesContainer = document.getElementById("courses-container");
-               if (coursesContainer.offsetParent !== null && !coursesPopulated){
-                    populateCourses();
-                    coursesPopulated = true;
-               }
-
                selectBox.closest('.custom-select').classList.toggle("open");
 
            }
@@ -206,10 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
             customSelect.querySelectorAll(".option.active").forEach(function(option){
                 option.classList.remove("active");
             });
-            const allTagsOption = customSelect.querySelector(".option.all-tags");
-            if (allTagsOption) {
-                allTagsOption.classList.remove("active");
-            }
+
             updateSelectedOptions(customSelect);
         });
     }
@@ -250,15 +222,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (valid){
-            console.log(ret_dict)
             sendSelectedOptionsToServer(ret_dict);
-            //alert(tags);
             resetCustomSelects();
         }
     });
 });
 
-
+// Sending a json of courses to create the account
 function sendSelectedOptionsToServer(selectedOptions) {
     fetch('/create_account', {
         method: 'POST',

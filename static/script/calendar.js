@@ -19,7 +19,7 @@ $(document).ready(function() {
                 },
 
                 eventClick: function (event) {
-                    // Show the details of the created event here
+                    // Show the details of the created event here, called from the calendar.js file
                     showCourseInfo(event.title);
                 },
                 events: appointments.map(appointment => ({

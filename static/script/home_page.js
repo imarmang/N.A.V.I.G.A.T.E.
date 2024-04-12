@@ -24,7 +24,6 @@ function showCourseInfo(courseInfo) {
     let infoBox = $('<div class="course-info-box">' +
                         '<p class="firstLine"> Appointment Details </p>'+
                         '<p class="secondLine">' + courseInfo + '</p>' +
-                        '<p class="thirdLine">' +  + '</p>' +
                         '<div class="two-buttons">' +
                         '<a href="#" class="appInfo-button">Close</a>' +
                         '<a href="#" class="deleteApp-button">Delete</a>' +
