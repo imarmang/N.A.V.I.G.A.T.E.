@@ -11,6 +11,8 @@ import pymongo
 # Datetime conversion
 from datetime import datetime
 
+# Used to generate a random key for the session
+import secrets
 
 app = Flask(__name__)
 
@@ -22,9 +24,8 @@ students_collection = database["Students"]
 staff_collection = database["Staff"]
 
 
-# NOT USING THIS FOR SECURITY RIGHT NOW
-# Later, this will be a randomly assigned key. I have it static for testing purposes
-app.secret_key = 'testing'
+# Random key for session
+app.secret_key = secrets.token_urlsafe(16)
 
 
 # Decorator to check if user is logged in. if not, they are redirected to log in page
@@ -141,16 +142,32 @@ def logged_in_home():
     return render_template('logged_in_home.html')
 
 
-@app.route('/fetch_tutor_info')
+@app.route('/get_appointment_info')
 @check_logged_in
-def fetch_tutor_info():
+def get_appointment_info():
 
     # Get JSON from front-end to get tutor's email (Could also be in form)
-    email = request.json['email']
+    date = request.json['date']
 
-    tutor_info = staff_collection.find_one({email})
+    # DB connection
+    appointment_collection = database["Appointments"]
 
-    return jsonify(tutor_info)
+    # Get the appointment information
+    appointment = appointment_collection.find_one({
+        'Appointment_date': date,
+        'nNumber': session['n_number']
+        })
+
+    ret_dict = {
+        'date': appointment['Appointment_date'],
+        'time': appointment['Appointment_time'],
+        'subject': appointment['Subject'],
+        'course': appointment['Course'],
+        'tutor': appointment['Tutor'],
+        'message': appointment['message']
+    }
+
+    return jsonify(ret_dict)
 
 
 @app.route('/create_appointment', methods = ['GET', 'POST'])
@@ -160,9 +177,43 @@ def create_appointment():
     # Retrieving N# from session
     nNumber = session.get('n_number')
 
-    # Putting this in here for now
+    # DB connection
     appointment_collection = database["Appointments"]
 
+    # Get relevant information from the form
+    course = request.form.get('secondDropdown')
+    date = request.form.get('datePicker')
+    tutor = request.form.get('thirdDropdown')
+    time = request.form.get('fourthDropdown')
+
+    print("time: ", time)
+    print("date: ", date)
+    print("course: ", course)
+    print("tutor: ", tutor)
+
+    # Split the string into a list
+    course_subject_list = course.split(" ")
+
+    # The first item in the list is subject
+    subject = course_subject_list[0]
+
+    # The second item in the list is course
+    course = course_subject_list[1]
+
+    # Combine the date and time into a single string then convert it to a datetime object to store in the database
+    datetime_string = f"{date} {time}"
+
+    datetime_object = datetime.strptime(datetime_string, "%m-%d-%y %H:%M")
+
+    # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
+    formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+
+    # Check if the appointment already exists
+    # Apparently code 409 means something along the lines of conflict because of state of the resource, so I used it
+    if appointment_collection.find_one({'nNumber': nNumber, 'Appointment_date': formatted_datetime, 'Appointment_time': time}) is not None:
+        return jsonify({'message': 'Appointment already exists'}), 409
+
+    # This if is kind of a relic of something else but keeping it because it does not hurt to have.
     if request.method == 'POST':
 
         # We need the date and course to make the appointment
@@ -170,12 +221,20 @@ def create_appointment():
 
         inputDict = {
             'nNumber': nNumber,
-            'date': request.form['Date'],
-            'Subject': request.form['Subject'],
-            'Course': request.form['course_ID']
+            'Appointment_date': formatted_datetime,
+            'Appointment_time': time,
+            'Subject': subject,
+            'Course': course,
+            'Tutor': tutor,
+            'message': []
         }
 
+        print(inputDict)
+
         appointment_collection.insert_one(inputDict)
+
+        # If everything is successful reload page
+        return render_template('logged_in_home.html')
 
 
 # To be used for creating appointments using the calendar.
@@ -309,6 +368,7 @@ def delete_appointment():
 
 # Returns availability of all tutors and time for a specific subject on a specific date and specific time to front-end
 # Format is: [{"tutor_name": "Brandon DeCelle", "tutor_times": ["09:00", "10:00", "11:00"]}, {"tutor_name": "Carlos Acacio", "tutor_times": ["13:00", "14:00", "15:00"]}
+# ALSO, THIS MUST BE FIXED ACCORDING TO THE CHANGES IN THE NEXT ROUTE.
 @app.route('/get_subject_availability_at_specific_time', methods=['GET'])
 def get_subject_availability_at_specific_time():
 
@@ -431,12 +491,25 @@ def get_subject_availability():
                         # Print the time slot being checked
                         print(f"Checking time slot: {time_slot['start_time']}")
 
+                        # Combine the specific day and the start time into a single string
+                        datetime_string = f"{specific_date} {time_slot['start_time']}"
+
+                        # Convert the string to a datetime object
+                        datetime_object = datetime.strptime(datetime_string, "%m-%d-%y %H:%M")
+
+                        # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
+                        formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+
+                        print(formatted_datetime)
+
                         # Check if an appointment for this time and tutor already exists
                         existing_appointment = appointment_collection.find_one({
-                            'Appointment_date': specific_day,
+                            'Appointment_date': formatted_datetime,
                             'Appointment_time': time_slot['start_time'],
-                            'tutor_name': tutor['first_name'] + ' ' + tutor['last_name']
+                            'Tutor': tutor['first_name'] + ' ' + tutor['last_name']
                         })
+
+                        print(f"Existing appointment: {existing_appointment}")
 
                         # If no existing appointment, add the start time to the tutor's times
                         if existing_appointment is None:
