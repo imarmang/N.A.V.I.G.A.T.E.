@@ -297,9 +297,9 @@ def store_appointment_message():
 
     # Getting JSON response and extract data
     data = request.json
-    time = data[0]
-    date = data[1]
-    message = data[2]
+    date = data['date']
+    time = data['time']
+    message = data['message']
 
     # Find appointment to store message in
     appointment = appointment_collection.find_one({
@@ -342,13 +342,11 @@ def delete_appointment():
     date = data['date']
     time = data['time']
 
-    datetime_string = f"{date} {time}"
+    print("date: ", date)
+    print("time: ", time)
 
-    # Convert the string to a datetime object
-    datetime_object = datetime.strptime(datetime_string, "%m-%d-%y %H:%M")
-
-    # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM" to use to search in the DB
-    formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+    # Combine the date and time into a single string then convert it to correct format
+    formatted_datetime = f"{date}T{time}"
 
     # Get the appointment collection
     appointment_collection = database["Appointments"]
@@ -372,6 +370,7 @@ def delete_appointment():
 # Returns availability of all tutors and time for a specific subject on a specific date and specific time to front-end
 # Format is: [{"tutor_name": "Brandon DeCelle", "tutor_times": ["09:00", "10:00", "11:00"]}, {"tutor_name": "Carlos Acacio", "tutor_times": ["13:00", "14:00", "15:00"]}
 # ALSO, THIS MUST BE FIXED ACCORDING TO THE CHANGES IN THE NEXT ROUTE.
+# NOT BEING USED RIGHT NOW
 @app.route('/get_subject_availability_at_specific_time', methods=['GET'])
 def get_subject_availability_at_specific_time():
 
