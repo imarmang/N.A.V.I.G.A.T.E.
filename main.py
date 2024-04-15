@@ -243,7 +243,8 @@ def calendar():
                                                    {'_id': 0,
                                                     'Appointment_date': 1,
                                                     'Course': 1,
-                                                    'Subject': 1}):
+                                                    'Subject': 1,
+                                                    'Tutor': 1,}):
 
         appointments.append(appointment)
 
