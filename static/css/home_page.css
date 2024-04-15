@@ -304,19 +304,13 @@ h3
     left: 20%;
 }
 
-.firstLine
+#firstLine, #secondLine, #thirdLine, #fourthLine, #fifthLine
 {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.secondLine
-{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
 .appInfo-button
 {

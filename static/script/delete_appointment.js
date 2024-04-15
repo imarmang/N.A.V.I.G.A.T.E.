@@ -14,6 +14,15 @@ function deleteAppointment(courseDate, courseTime){
             body: JSON.stringify(delApp),
         })
         .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Appointment deleted successfully') {
+                // Reload the page after successful deletion
+                location.reload();
+            } else {
+                // Handle error
+                console.error('Error:', data.message);
+            }
+        })
 
         .catch(error => {
             console.error('Error:', error);
@@ -25,11 +34,11 @@ function deleteAppointment(courseDate, courseTime){
 // This method shows the appointment information
 function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
     let infoBox = $('<div class="course-info-box">' +
-                        '<p class="firstLine"> Appointment Details </p>'+
-                        '<p class="secondLine">' + courseTitle + '</p>' +
-                        '<p class="thirdLine"> Date: ' + courseDate + '</p>' +
-                        '<p class="fourthLine"> Time: ' + courseTime + '</p>' +
-                        '<p class="fifthLine"> Tutor: ' + courseTutor + '</p>' +
+                        '<p class="firstLine" id="firstLine"> Appointment Details </p>'+
+                        '<p class="secondLine" id="secondLine">' + courseTitle + '</p>' +
+                        '<p class="thirdLine" id="thirdLine"> Date: ' + courseDate + '</p>' +
+                        '<p class="fourthLine" id="fourthLine"> Time: ' + courseTime + '</p>' +
+                        '<p class="fifthLine" id="fifthLine"> Tutor: ' + courseTutor + '</p>' +
                         '<div class="courseInfoButtons">' +
                         '<a href="#" class="appInfo-button">Close</a>' +
                         '<button class="deleteApp-button">Delete</button>' +
