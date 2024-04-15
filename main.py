@@ -339,8 +339,8 @@ def get_appointment_messages():
 def delete_appointment():
     # Extract data from the JSON request
     data = request.json
-    time = data[0]
-    date = data[1]
+    date = data['date']
+    time = data['time']
 
     datetime_string = f"{date} {time}"
 
