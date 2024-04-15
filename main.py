@@ -226,10 +226,15 @@ def create_appointment():
 
         print(inputDict)
 
-        appointment_collection.insert_one(inputDict)
+        if appointment_collection.find_one({'Appointment_date': formatted_datetime, 'nNumber': nNumber}) is None:
 
-        # If everything is successful reload page
-        return render_template('logged_in_home.html')
+            appointment_collection.insert_one(inputDict)
+
+            # If everything is successful reload page
+            return render_template('logged_in_home.html')
+
+        else:
+            return render_template('logged_in_home.html')
 
 
 # To be used for creating appointments using the calendar.
@@ -351,18 +356,24 @@ def delete_appointment():
     # Get the appointment collection
     appointment_collection = database["Appointments"]
 
+    print("formatted_datetime: ", formatted_datetime)
+
     # Find the appointment that matches the date, time, and nNumber
     appointment = appointment_collection.find_one({
         'Appointment_date': formatted_datetime,
         'nNumber': session['n_number']
     })
 
+    print("appointment: ", appointment)
+
     # Check if the appointment exists
     if appointment is not None:
         # If the appointment exists, delete it
+        print("Deleting appointment: ", appointment['_id'])
         appointment_collection.delete_one({'_id': appointment['_id']})
         return jsonify({'message': 'Appointment deleted successfully'}), 200
     else:
+        print("Appointment not found")
         # If the appointment does not exist, return an error message
         return jsonify({'message': 'Appointment not found'}), 404
 
