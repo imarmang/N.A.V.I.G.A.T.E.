@@ -208,11 +208,6 @@ def create_appointment():
     # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
     formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
 
-    # Check if the appointment already exists
-    # Apparently code 409 means something along the lines of conflict because of state of the resource, so I used it
-    if appointment_collection.find_one({'nNumber': nNumber, 'Appointment_date': formatted_datetime, 'Appointment_time': time}) is not None:
-        return jsonify({'message': 'Appointment already exists'}), 409
-
     # This if is kind of a relic of something else but keeping it because it does not hurt to have.
     if request.method == 'POST':
 
@@ -421,15 +416,25 @@ def get_subject_availability_at_specific_time():
                         if time_slot['start_time'] == specific_time:
 
                             # Check if an appointment for this time and tutor already exists
-                            existing_appointment = appointment_collection.find_one({
+                            existing_tutor_appointment = appointment_collection.find_one({
                                 'Appointment_date': specific_date,
                                 'Appointment_time': specific_time,
                                 'tutor_name': tutor['first_name'] + ' ' + tutor['last_name']
                             })
 
-                            # If no existing appointment, add the start time to the tutor's times
-                            if existing_appointment is None:
-                                tutor_times.append(specific_time)
+                            # Check if an appointment for this time and current user already exists
+                            existing_user_appointment = appointment_collection.find_one({
+                                'Appointment_date': specific_date,
+                                'Appointment_time': time_slot['start_time'],
+                                'nNumber': session['n_number']
+                            })
+
+                            print(existing_tutor_appointment)
+                            print(existing_user_appointment)
+
+                            # If no existing appointment for the tutor and the user, add the start time to the tutor's times
+                            if existing_tutor_appointment is None and existing_user_appointment is None:
+                                tutor_times.append(time_slot['start_time'])
 
             # If the tutor has times on the specific day, add them to the tutor availability
             if tutor_times:
@@ -503,17 +508,25 @@ def get_subject_availability():
                         print(formatted_datetime)
 
                         # Check if an appointment for this time and tutor already exists
-                        existing_appointment = appointment_collection.find_one({
+                        existing_tutor_appointment = appointment_collection.find_one({
                             'Appointment_date': formatted_datetime,
                             'Appointment_time': time_slot['start_time'],
                             'Tutor': tutor['first_name'] + ' ' + tutor['last_name']
                         })
 
-                        print(f"Existing appointment: {existing_appointment}")
+                        # Check if an appointment for this time and current user already exists
+                        existing_user_appointment = appointment_collection.find_one({
+                            'Appointment_date': formatted_datetime,
+                            'Appointment_time': time_slot['start_time'],
+                            'nNumber': session['n_number']
+                        })
 
-                        # If no existing appointment, add the start time to the tutor's times
-                        if existing_appointment is None:
+                        # If no existing appointment for the tutor and the user, add the start time to the tutor's times
+                        if existing_tutor_appointment is None and existing_user_appointment is None:
                             tutor_times.append(time_slot['start_time'])
+
+                    # I can safely break this loop because only 1 day can match the specific day.
+                    break
 
             # If the tutor has times on the specific day, add them to the tutor availability
             if tutor_times:
