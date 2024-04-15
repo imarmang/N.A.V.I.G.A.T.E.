@@ -225,6 +225,26 @@ h3 {
     left: 50%; /* Center the buttons horizontally */
     transform: translateX(-50%); /* Center the buttons horizontally */
 }
+/* Create button */
+.createBtn {
+    text-decoration: none !important;
+    background-color: #2F4263;
+    display: inline-block;
+    font-size: 15px;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 15px;
+    transition: .3s;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.createBtn:hover{
+    text-decoration: none;
+    background-color: #506B90;
+    color: #fff;
+}
 
 
 /* Showing the information about the made appointment */

@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let datePicker = document.getElementById('datePicker');
     let thirdDropdown = document.getElementById('thirdDropdown');
     let fourthDropdown = document.getElementById('fourthDropdown');
+    let createBtn = document.getElementById('createBtn');
 
     firstDropdown.addEventListener('change', function() {
         let serviceType = this.value;
@@ -41,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             datePicker.style.display = 'none';
             thirdDropdown.style.display = 'none';
             fourthDropdown.style.display = 'none';
+            createBtn.style.display = 'none';
+
 
             secondDropdown.value = '';
             datePicker.value = '';
@@ -63,11 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
             datePicker.style.display = 'none';
             thirdDropdown.style.display = 'none';
             fourthDropdown.style.display = 'none';
+            createBtn.style.display = 'none';
+
 
             // Clearing all the values if we switch back to the Service Type
             datePicker.value = '';
             thirdDropdown.value = '';
             fourthDropdown.value = '';
+
         }
 
      });
@@ -135,6 +141,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             thirdDropdown.style.display = 'none';
             fourthDropdown.style.display = 'none';
+            createBtn.style.display = 'none';
+
+            thirdDropdown.value = '';
+            fourthDropdown.value = '';
+
         }
     });
 
@@ -162,6 +173,18 @@ document.addEventListener('DOMContentLoaded', function() {
             fourthDropdown.style.display = 'block';
         } else {
             fourthDropdown.style.display = 'none';
+            createBtn.style.display = 'none';
+
+            fourthDropdown.value = '';
+
+        }
+    });
+
+    fourthDropdown.addEventListener('change', function() {
+        if (fourthDropdown.value !== "Choose a timeslot") {
+            createBtn.style.display = 'block';
+        } else {
+            createBtn.style.display = 'none';
         }
     });
 });
