@@ -341,13 +341,20 @@ def delete_appointment():
     time = data[0]
     date = data[1]
 
+    datetime_string = f"{date} {time}"
+
+    # Convert the string to a datetime object
+    datetime_object = datetime.strptime(datetime_string, "%m-%d-%y %H:%M")
+
+    # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM" to use to search in the DB
+    formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+
     # Get the appointment collection
     appointment_collection = database["Appointments"]
 
     # Find the appointment that matches the date, time, and nNumber
     appointment = appointment_collection.find_one({
-        'Appointment_date': date,
-        'Appointment_time': time,
+        'Appointment_date': formatted_datetime,
         'nNumber': session['n_number']
     })
 
