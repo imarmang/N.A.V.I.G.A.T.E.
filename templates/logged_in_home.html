@@ -21,8 +21,7 @@
     />
 
     <title>Home</title>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
     <!-- Importing jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -98,7 +97,7 @@
     </div>
 
     <!-- Calendar name and the Appointment button -->
-    <div id="blur">
+    <div class="blur-container" id="blur">
       <div class="buttonAndLogo">
         <p class="name">Your Calendar</p>
         <div class="button">
@@ -107,7 +106,7 @@
       </div>
       <!-- Appears after clicking the button -->
       <div id="popup">
-         <form action="/create_appointment" method="post">
+        <form action="/create_appointment" method="post">
           <h3>Create an Event</h3>
 
           <div class="dropdown-container">
@@ -122,23 +121,39 @@
 
               <!-- Courses input box -->
               <label>
-                <select id="secondDropdown" name="secondDropdown" style="display: none"></select>
+                <select
+                  id="secondDropdown"
+                  name="secondDropdown"
+                  style="display: none"
+                ></select>
               </label>
 
               <!-- Calendar day -->
               <label>
-                <input type="text" id="datePicker" name="datePicker" style="display: none"
+                <input
+                  type="text"
+                  id="datePicker"
+                  name="datePicker"
+                  style="display: none"
               /></label>
 
               <!-- Choose your tutor based on the calendar -->
               <label>
-                <select id="thirdDropdown" name="thirdDropdown" style="display: none"></select>
+                <select
+                  id="thirdDropdown"
+                  name="thirdDropdown"
+                  style="display: none"
+                ></select>
               </label>
 
               <!--Choose the time slot -->
 
               <label>
-                <select id="fourthDropdown" name="fourthDropdown" style="display: none"></select>
+                <select
+                  id="fourthDropdown"
+                  name="fourthDropdown"
+                  style="display: none"
+                ></select>
               </label>
             </div>
             <!--Two buttons: Cancel, Create -->
@@ -148,7 +163,14 @@
               </div>
 
               <div class="button">
-                <button class="createBtn" id="createBtn" type="submit" style="display: none">Create</button>
+                <button
+                  class="createBtn"
+                  id="createBtn"
+                  type="submit"
+                  style="display: none"
+                >
+                  Create
+                </button>
               </div>
             </div>
           </div>
@@ -167,6 +189,10 @@
     <script
       type="text/javascript"
       src="{{ url_for('static',filename='script/appointmentDropDown.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/delete_appointment.js') }}"
     ></script>
   </body>
 </html>

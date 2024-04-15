@@ -1,8 +1,9 @@
-var inBtn = document.getElementById("signInBtn"); // a
-var upBtn = document.getElementById("signUpBtn");  // b
-var login = document.getElementById("login");  // x
-var register = document.getElementById("register");  // y
-var courses = document.getElementById("courses-container");
+let inBtn = document.getElementById("signInBtn"); // a
+let upBtn = document.getElementById("signUpBtn");  // b
+let login = document.getElementById("login");  // x
+let register = document.getElementById("register");  // y
+let courses = document.getElementById("courses-container");
+let cont_btn = document.getElementById("cont_btn");
 
 // Helper function to handle transitions
 function handleTransition(element, position, opacity) {
@@ -33,11 +34,20 @@ function signIn() {
     handleTransition(courses, "-520px", "0");
     inBtn.className += " white-btn";
     upBtn.className = "btn";
+
+    // Reset the input fields
+    firstInput.value = "";
+    secondInput.value = "";
+    thirdInput.value = "";
+    fourthInput.value = "";
+    fifthInput.value = "";
+    cont_btn.style.display = "none";
+
 }
 
 // homeFunction transition
 function homeFunction() {
-    var i = document.getElementById("navMenu");
+    let i = document.getElementById("navMenu");
 
     if (i.className === "nav-menu") {
       i.className += " responsive";
@@ -45,3 +55,33 @@ function homeFunction() {
       i.className = "nav-menu";
     }
 }
+
+// Checking if all the registration inputs are filled so the Continue button occurs
+let firstInput = document.getElementById("firstName");
+let secondInput = document.getElementById("lastName");
+let thirdInput = document.getElementById("nNumber");
+let fourthInput = document.getElementById("email");
+let fifthInput = document.getElementById("password");
+
+function checkInputs() {
+    return firstInput.value.trim() !== "" &&
+        secondInput.value.trim() !== "" &&
+        thirdInput.value.trim() !== "" &&
+        fourthInput.value.trim() !== "" &&
+        fifthInput.value.trim() !== "";
+}
+
+function updateButtonVisibility() {
+    if (checkInputs()) {
+        cont_btn.style.display = "block";
+    } else {
+        cont_btn.style.display = "none";
+    }
+}
+
+// Add event listeners to all input fields
+firstInput.addEventListener("input", updateButtonVisibility);
+secondInput.addEventListener("input", updateButtonVisibility);
+thirdInput.addEventListener("input", updateButtonVisibility);
+fourthInput.addEventListener("input", updateButtonVisibility);
+fifthInput.addEventListener("input", updateButtonVisibility);

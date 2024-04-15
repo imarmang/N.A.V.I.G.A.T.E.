@@ -29,8 +29,7 @@
     />
 
     <title>N.A.V.I.G.A.T.E.</title>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   </head>
   <body>
     <div class="wrapper">
@@ -101,11 +100,16 @@
               <div class="input-box">
                 <input type="submit" class="submit" value="Sign In" />
               </div>
-{#              <div class="two-col">#}
-{#                <div class="two">#}
-{#                  <label><a href="#">Forgot your password?</a></label>#}
-{#                </div>#}
-{#              </div>#}
+              {#
+              <div class="two-col">
+                #} {#
+                <div class="two">
+                  #} {# <label><a href="#">Forgot your password?</a></label
+                  >#} {#
+                </div>
+                #} {#
+              </div>
+              #}
             </form>
           </div>
 
@@ -185,7 +189,12 @@
               <i class="bx bx-lock-alt"></i>
             </div>
             <div class="input-box">
-              <button class="cont_btn" id="signUpBtn" onclick="continueBtn()">
+              <button
+                class="cont_btn"
+                id="cont_btn"
+                style="display: none"
+                onclick="continueBtn()"
+              >
                 Continue
               </button>
             </div>

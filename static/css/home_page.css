@@ -12,7 +12,8 @@ body
     background: #fff;
 }
 
-.side-bar {
+.side-bar
+{
     position: fixed;
     top: 0;
     left: 0;
@@ -24,22 +25,27 @@ body
     z-index: 100;
 }
 
-.container {
+.container
+{
     z-index: 1;
 }
-/* When active */
-.side-bar.active {
+
+/* When the side bar is active active */
+.side-bar.active
+{
     width: 260px;
 }
 
-.side-bar .nav-menu{
+.side-bar .nav-menu
+{
     display: flex;
     align-items: center;
     width: 100%;
     height: 70px;
 }
 
-.side-bar .nav-menu .logo{
+.side-bar .nav-menu .logo
+{
     font-size: 25px;
     color: #fff;
     opacity: 0;
@@ -50,12 +56,14 @@ body
 }
 
 /* When active */
-.side-bar.active .nav-menu .logo {
+.side-bar.active .nav-menu .logo
+{
     opacity: 1;
     transition-delay: .2s;
 }
 
-.side-bar .nav-menu .toggle-btn {
+.side-bar .nav-menu .toggle-btn
+{
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -70,15 +78,18 @@ body
 }
 
 /* When active */
-.side-bar.active .nav-menu .toggle-btn {
+.side-bar.active .nav-menu .toggle-btn
+{
     left: 90%;
 }
 
-.side-bar .list{
+.side-bar .list
+{
     margin-top: 10px;
 }
 
-.list .list-item {
+.list .list-item
+{
     list-style: none;
     width: 100%;
     height: 50px;
@@ -86,7 +97,8 @@ body
     line-height: 50px;
 }
 
-.list .list-item a {
+.list .list-item a
+{
     display: flex;
     align-items: center;
     font-size: 15px;
@@ -98,24 +110,28 @@ body
 }
 
 .list .list-item.active a,
-.list .list-item a:hover {
+.list .list-item a:hover
+{
     background: rgba(255, 255, 255, .2) ;
 }
 
-.list .list-item a i {
+.list .list-item a i
+{
     min-width: 50px;
     height: 50px;
     text-align: center;
     line-height: 50px;
 }
 
-.side-bar .link-name {
+.side-bar .link-name
+{
     opacity: 0;
     pointer-events: none;
 }
 
 /* When active */
-.side-bar.active .link-name {
+.side-bar.active .link-name
+{
     opacity: 1;
     pointer-events: auto;
     transition-delay: calc(.075s * var(--i));
@@ -123,31 +139,37 @@ body
 
 /* ---------------------------------------------------------------------------------------- */
 /* Your calendar and the Make Appointment */
-#blur.active {
+#blur.active
+{
     pointer-events: none;
     user-select: none;
 }
 
-.buttonAndLogo {
+.buttonAndLogo
+{
     display: flex;
     margin-left: 140px;
     margin-top: 25px;
 }
 
-.name {
+.name
+{
+    margin-left: 10px;
     font-size: 25px;
     font-weight: 600;
     display: flex;
 }
 
-.button {
+.button
+{
     display: flex;
     align-items: center;
     margin-left: 8px;
     margin-bottom: 8px;
 }
 
-.button a {
+.button a
+{
     text-decoration: none !important;
     background-color: #2F4263;
     display: inline-block;
@@ -158,18 +180,21 @@ body
     transition: .3s;
 }
 
-.button a:hover {
+.button a:hover
+{
     text-decoration: none;
     background-color: #506B90;
     color: #fff;
 }
 
-.button a:visited {
+.button a:visited
+{
     color: #fff;
 }
 
 /* Popup box to make appointments */
-#popup {
+#popup
+{
     position: fixed;
     top: 40%;
     left: 50%;
@@ -185,7 +210,8 @@ body
 
 }
 
-#popup.active {
+#popup.active
+{
     z-index: 101;
     top: 50%;
     visibility: visible;
@@ -195,19 +221,22 @@ body
 }
 
 /* Create an appointment */
-h3 {
+h3
+{
     margin-left: 160px;
     margin-top: 20px;
 }
 
-.input-box {
+.input-box
+{
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     margin-left: 160px;
 }
 
-#firstDropdown, #secondDropdown, #thirdDropdown, #datePicker, #fourthDropdown {
+#firstDropdown, #secondDropdown, #thirdDropdown, #datePicker, #fourthDropdown
+{
     width: 200px;
     border-radius: 6px;
     border: 1px solid #2F4263;
@@ -217,7 +246,8 @@ h3 {
 }
 
 
-.two-buttons {
+.two-buttons
+{
     display: flex;
     justify-content: space-between;
     position: absolute; /* Change from 'fixed' to 'absolute' */
@@ -226,7 +256,8 @@ h3 {
     transform: translateX(-50%); /* Center the buttons horizontally */
 }
 /* Create button */
-.createBtn {
+.createBtn
+{
     text-decoration: none !important;
     background-color: #2F4263;
     display: inline-block;
@@ -240,7 +271,8 @@ h3 {
     text-align: center;
 }
 
-.createBtn:hover{
+.createBtn:hover
+{
     text-decoration: none;
     background-color: #506B90;
     color: #fff;
@@ -248,34 +280,46 @@ h3 {
 
 
 /* Showing the information about the made appointment */
-.course-info-box {
+.course-info-box
+{
     position: fixed;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: #fff;
-    width: 300px;
-    height: 200px;
+    width: 500px;
+    height: 300px;
     border-radius: 6px;
     box-shadow: 0 5px 30px rgba(0, 0, 0, .30);
-    z-index: 150;
-    pointer-events: auto;
-
+    z-index: 101;
+    opacity: 0;
 }
 
-.firstLine {
+.courseInfoButtons
+{
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 10px;
+    left: 20%;
+}
+
+.firstLine
+{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.secondLine {
+.secondLine
+{
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.appInfo-button{
+.appInfo-button
+{
     text-decoration: none !important;
     background-color: #2F4263;
     display: inline-block;
@@ -288,14 +332,17 @@ h3 {
     justify-content: space-between;
 }
 
-.appInfo-button:hover {
+.appInfo-button:hover
+{
     text-decoration: none;
     background-color: #506B90;
     color: #fff;
 }
 
-.deleteApp-button{
-    text-decoration: none !important;
+.deleteApp-button
+{
+    text-decoration: none;
+    margin-left: 10px;
     background-color: #2F4263;
     display: inline-block;
     font-size: 15px;
@@ -303,14 +350,76 @@ h3 {
     border-radius: 6px;
     padding: 10px 20px;
     transition: .3s;
-    margin-left: 37%;
     justify-content: space-between;
+    border: none;
 }
 
-.deleteApp-button:hover {
+.deleteApp-button:hover
+{
     text-decoration: none;
     background-color: #506B90;
     color: #fff;
 }
 
 /* Calendar CSS */
+.container .calendar
+{
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.fc-header-toolbar
+{
+    padding: 5px;
+    background-color: #f4f4f4;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Style the calendar buttons */
+.fc-header-toolbar .fc-button
+{
+    font-weight: 200;
+    font-size: 15px;
+    color: #fff;
+    background-color: #2F4263;
+    border: none;
+    border-radius: 4px;
+    margin-right: 5px;
+    padding: 5px 10px;
+    transition: .2s ease-in-out;
+}
+
+
+.fc-header-toolbar .fc-button:hover
+{
+    background-color: #506B90;
+}
+
+.fc-view-container
+{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border: none;
+    border-radius: 15px;
+}
+
+/* Style the calendar events */
+.fc-event
+{
+    background-color: #2F4263 ;
+    border: none;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+}
+
+.fc-event:hover
+{
+    background-color: #506B90;
+}
