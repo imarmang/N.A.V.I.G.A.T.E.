@@ -29,8 +29,6 @@ function deleteAppointment(courseDate, courseTime){
         });
 }
 
-
-
 // This method shows the appointment information
 function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
     let infoBox = $('<div class="course-info-box">' +
@@ -41,7 +39,8 @@ function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
                         '<p class="fifthLine" id="fifthLine"> Tutor: ' + courseTutor + '</p>' +
                         '<div class="courseInfoButtons">' +
                         '<a href="#" class="appInfo-button">Close</a>' +
-                        '<button class="deleteApp-button">Delete</button>' +
+                        '<button class="deleteApp-button" onclick="deleteAppointment(\'' + courseDate + '\', \'' + courseTime + '\')">Delete' +
+                        '</button>' +
                         '</div>'+
                   '</div>');
     $('body').append(infoBox);
@@ -55,12 +54,5 @@ function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
             $(this).remove();
         });
         $('.blur-container').css('pointer-events', 'auto');
-    });
-
-    // This function calls the delete_appointment
-    // route to delete the appointment from the DB
-    // which would be reflected on the front end calendar
-    infoBox.find('.deleteApp-button').on('click', function() {
-        deleteAppointment(courseDate, courseTime);
     });
 }
