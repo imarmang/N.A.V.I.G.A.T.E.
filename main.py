@@ -96,7 +96,7 @@ def create_account():
         # Determine if email is already in use
         # TODO let user know it is already in use
         if email_already_used(email):
-            return render_template('student_login.html')
+            return jsonify({'message': 'Email already in use'}), 403
 
         # Only add user if email is unique
         else:
@@ -108,6 +108,8 @@ def create_account():
             nNumber = userInfoRequest['user_info'][2]
 
             student_courses = userInfoRequest['courses']
+
+            print("student_courses: ", student_courses)
 
             # Encrypt password before sending it into the database
             pw_hash = generate_password_hash(password).decode('utf-8')
@@ -269,6 +271,7 @@ def get_courses():
                                            'Subject': 1})
     # creates list of courses formatted as dicts
     courses_list = [x for x in courses]
+    print(courses_list)
     return jsonify(courses_list)
 
 
@@ -289,8 +292,12 @@ def get_student_courses():
 
 # Used to load student courses from dropdown menu into DB (Saving here as route to use for modifying courses later)
 @app.route('/store_selected_courses', methods=['POST'])
-def store_selected_courses(nNumber):
+def store_selected_courses():
     selected_courses = request.json['selected_courses']
+
+    nNumber = session['n_number']
+
+    print(selected_courses)
 
     # Needed to store the selected courses in the student's database
     students_collection.update_one({'student_info.nNumber': nNumber},
