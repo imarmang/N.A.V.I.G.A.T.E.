@@ -226,15 +226,17 @@ def create_appointment():
 
         print(inputDict)
 
-        if appointment_collection.find_one({'Appointment_date': formatted_datetime, 'nNumber': nNumber}) is None:
+        if request.method == 'POST':
 
-            appointment_collection.insert_one(inputDict)
+            if appointment_collection.find_one({'Appointment_date': formatted_datetime, 'nNumber': nNumber}) is None:
 
-            # If everything is successful reload page
-            return render_template('logged_in_home.html')
+                appointment_collection.insert_one(inputDict)
 
-        else:
-            return render_template('logged_in_home.html')
+                # If everything is successful reload page
+                return redirect(url_for('logged_in_home'))
+
+            else:
+                return redirect(url_for('logged_in_home'))
 
 
 # To be used for creating appointments using the calendar.
