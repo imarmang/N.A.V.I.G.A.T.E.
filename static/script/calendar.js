@@ -39,4 +39,3 @@ $(document).ready(function() {
                     console.error('Error fetching appointments:', error);
                 });
 });
-
