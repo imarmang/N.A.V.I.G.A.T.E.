@@ -10,8 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to update selected options
     function updateSelectedOptions(customSelect){
-
-       // Get all active options that are not "all-tags"
         const selectedOptions = Array.from(customSelect.querySelectorAll(".option.active")).map(function(option){
             return {
                 value: option.getAttribute("data-value"),
@@ -201,9 +199,11 @@ document.addEventListener("DOMContentLoaded", function() {
         ret_dict["user_info"].push(document.querySelector("#email").value);
         ret_dict["user_info"].push(document.querySelector("#password").value);
 
-        let tags = document.querySelector(".tags_input").value;
-
-        ret_dict["courses"] = tags.split(', ')
+        // let tags = document.querySelector(".tags_input").value;
+        //
+        // ret_dict["courses"] = tags.split(', ')
+        // Collecting selected courses
+        ret_dict["courses"] = Array.from(document.querySelectorAll(".option.active")).map(option => option.getAttribute("data-value"));
 
         customSelects.forEach(function(customSelect){
             const selectedOptions = customSelect.querySelectorAll(".option.active");
@@ -244,6 +244,7 @@ function sendSelectedOptionsToServer(selectedOptions) {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             if (data.message === 'Account created successfully') {
                 // Redirect to the logged in page
                 window.location.href = '/';
