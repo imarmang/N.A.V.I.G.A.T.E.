@@ -58,9 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datePicker.style.display = 'block';
             flatpickr(datePicker, {
                 dateFormat: "m-d-y",
-                onChange: function(selectedDates, dateStr) {
-                    console.log("Date selected: ", dateStr);
-                }
+                minDate: new Date().fp_incr(1), // Set the minimum date to tomorrow
             });
         }else{
             datePicker.style.display = 'none';

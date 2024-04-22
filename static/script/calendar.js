@@ -1,11 +1,13 @@
 $(document).ready(function() {
     // Fetch the appointment data from the Flask route
-    fetch('/get_appointments')
+    fetch('/get_appointments',{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
         .then(response => response.json())
         .then(appointments => {
-            console.log("All the appointments" + appointments.map(appointment =>
-                                                        JSON.stringify(appointment)
-                                                        ));
             // Initialize the calendar with the fetched appointments
             $('.calendar').fullCalendar({
                 header: {

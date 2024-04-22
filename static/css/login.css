@@ -291,6 +291,7 @@ header
     transition: .3s ease-in-out;
     transform: translateX(-3.5%);
     margin-left: 15px;
+    visibility: hidden;  /* Initially hidden */
 }
 
 .cont_btn:hover

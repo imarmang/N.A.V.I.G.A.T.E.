@@ -11,7 +11,15 @@
     />
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/home_page.css') }}"
+      href="{{url_for('static',filename='css/home-page.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/appointment-details.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/calendar.css') }}"
     />
 
     <!-- jQuery UI CSS CDN -->
@@ -112,7 +120,7 @@
           <div class="dropdown-container">
             <div class="input-box">
               <label>
-                <select id="firstDropdown" name="firstDropdown">
+                <select class="dropdowns" id="firstDropdown" name="firstDropdown">
                   <option value="Empty">Service Type</option>
                   <option value="TTC">Tutoring Center</option>
                   <option value="CAPS">CAPS Appointment</option>
@@ -122,6 +130,7 @@
               <!-- Courses input box -->
               <label>
                 <select
+                  class="dropdowns"
                   id="secondDropdown"
                   name="secondDropdown"
                   style="display: none"
@@ -132,6 +141,7 @@
               <label>
                 <input
                   type="text"
+                  class="dropdowns"
                   id="datePicker"
                   name="datePicker"
                   style="display: none"
@@ -140,6 +150,7 @@
               <!-- Choose your tutor based on the calendar -->
               <label>
                 <select
+                  class="dropdowns"
                   id="thirdDropdown"
                   name="thirdDropdown"
                   style="display: none"
@@ -150,6 +161,7 @@
 
               <label>
                 <select
+                  class="dropdowns"
                   id="fourthDropdown"
                   name="fourthDropdown"
                   style="display: none"
@@ -192,7 +204,7 @@
     ></script>
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/delete_appointment.js') }}"
+      src="{{ url_for('static',filename='script/appointmentOperations.js') }}"
     ></script>
   </body>
 </html>

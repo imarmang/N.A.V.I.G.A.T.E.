@@ -41,8 +41,8 @@ function signIn() {
     thirdInput.value = "";
     fourthInput.value = "";
     fifthInput.value = "";
-    cont_btn.style.display = "none";
-
+    cont_btn.style.visibility = "hidden";
+    window.resetCustomSelects();
 }
 
 // homeFunction transition
@@ -73,9 +73,9 @@ function checkInputs() {
 
 function updateButtonVisibility() {
     if (checkInputs()) {
-        cont_btn.style.display = "block";
+        cont_btn.style.visibility = "visible";
     } else {
-        cont_btn.style.display = "none";
+        cont_btn.style.visibility = "hidden";
     }
 }
 

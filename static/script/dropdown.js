@@ -3,6 +3,7 @@ let coursesPopulated = false;
 // Options is a NodeList that will be keeping all the courses that were created dynamically in the populateCourses function
 let options = null;
 // Event listener for when the DOM is fully loaded
+let courseCounter = 0;
 document.addEventListener("DOMContentLoaded", function() {
 
      // Select all elements with the class "custom-select"
@@ -16,9 +17,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 text: option.textContent.trim()
             };
         });
-         if (!coursesPopulated){
-             populateCourses(customSelect);
-         }
+        if (!coursesPopulated){
+            populateCourses(customSelect);
+        }
 
         // Set the value of the hidden input to the selected values
         customSelect.querySelector(".tags_input").value = selectedOptions.join(', ');
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Check if any options are selected
         if (selectedOptions.length === 0) {
             // If no options are selected, show placeholder
-            tagsHTML = '<span class="placeholder">Select the tags</span>';
+            tagsHTML = '<span class="placeholder">Select courses</span>';
         } else{
             // If options are selected, show up to 4 tags and the count of additional tags
             const maxTagsToShow = 3;
@@ -70,11 +71,17 @@ document.addEventListener("DOMContentLoaded", function() {
                     div.textContent = course.Subject + " " + course.Course_ID;
                     // Add event listener to each div
                     div.addEventListener("click", function () {
-                        div.classList.toggle("active");
-                        // For each custom select, call updateSelectedOptions
-                        customSelects.forEach(function(customSelect){
-                            updateSelectedOptions(customSelect);
-                        });
+                        if (courseCounter < 9) {
+                            div.classList.toggle("active");
+                            // For each custom select, call updateSelectedOptions
+                            customSelects.forEach(function (customSelect) {
+                                updateSelectedOptions(customSelect);
+                            });
+                            courseCounter++;
+                            console.log("Number of courses Selected: " + courseCounter);
+                        } else{
+                            alert("You cannot select more than 9 courses.");
+                        }
                     });
                     containerElement.appendChild(div);
 
@@ -150,6 +157,8 @@ document.addEventListener("DOMContentLoaded", function() {
            const valueToRemove = removeTag.getAttribute("data-value");
            const optionToRemove = customSelect.querySelector(".option[data-value='"+valueToRemove+"']");
            optionToRemove.classList.remove("active");
+           courseCounter--;
+           console.log("Number of courses Selected: " + courseCounter);
 
            updateSelectedOptions(customSelect);
        }
@@ -174,13 +183,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    function resetCustomSelects(){
+
+    window.resetCustomSelects = function() {
         customSelects.forEach(function(customSelect) {
             customSelect.querySelectorAll(".option.active").forEach(function(option){
                 option.classList.remove("active");
             });
 
             updateSelectedOptions(customSelect);
+            courseCounter = 0;
+            console.log("Number of courses Selected: " + courseCounter);
         });
     }
     updateSelectedOptions(customSelects[0]);
@@ -239,7 +251,8 @@ function sendSelectedOptionsToServer(selectedOptions) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Failed to send selected options to server');
+                alert('Email already in use');
+                window.location.href = '/';
             }
             return response.json();
         })
@@ -249,8 +262,9 @@ function sendSelectedOptionsToServer(selectedOptions) {
                 // Redirect to the logged in page
                 window.location.href = '/';
             }
+
         })
     .catch(error => {
-        console.error(error);
+        console.error('Error:', error);
     });
 }
