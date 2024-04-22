@@ -38,6 +38,12 @@ def check_logged_in(func):
     return wrapper_func
 
 
+#Used for post redirect get function to handle form auto submission issue.
+@app.route('/student_login')
+def student_login():
+    return render_template('student_login.html')
+
+
 # Login page
 @app.route('/', methods=['GET', 'POST'])
 def student_home():
@@ -52,7 +58,7 @@ def student_home():
         if login_successful(username, password):
             return redirect(url_for('logged_in_home'))
         else:
-            pass
+            return redirect(url_for('student_login'))
 
     return render_template('student_login.html')
 
@@ -66,8 +72,11 @@ def login_successful(username, password):
     # Finds the student that matches the username and store the corresponding database table
     student = students_collection.find_one({'student_info.email': username})
 
+    if student is None:
+        return False
+
     # Checks if the username and password match the database
-    if student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
+    elif student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
         session['n_number'] = student['student_info']['nNumber']
         return True
     else:
