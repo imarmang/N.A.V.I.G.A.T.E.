@@ -232,7 +232,7 @@ def create_appointment():
             'Subject': subject,
             'Course': course,
             'Tutor': tutor,
-            'message': []
+            'message': ''
         }
 
         print(inputDict)
@@ -324,19 +324,26 @@ def store_appointment_message():
     time = data['time']
     message = data['message']
 
-    # Find appointment to store message in
-    appointment = appointment_collection.find_one({
-        'Appointment_date': date,
+    # Convert date to format used in DB
+    datetime_string = f"{date} {time}"
+    datetime_object = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M")
+
+    # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
+    formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+
+    # Updates the appointment with the message
+    # update_one stores the # of modified documents in the variable appointment
+    appointment = appointment_collection.update_one({
+        'Appointment_date': formatted_datetime,
         'Appointment_time': time,
         'nNumber': session['n_number']
-    })
+    },
+        {'$set': {'message': message}}
+    )
 
-    # Check if the appointment exists
-    if appointment is not None:
-        # If the appointment exists, store message in the appointment
-        # Update the appointment with the message
-        appointment_collection.update_one({'_id': appointment['_id']}, {'$set': {'message': message}})
-        return jsonify({'Appointment message stored successfully'}), 200
+    # Check if any documents were changed (Just 1 in this case)
+    if appointment.modified_count > 0:
+        return jsonify({'message': 'Appointment message stored successfully'}), 200
     else:
         # If the appointment does not exist, return an error message
         return jsonify({'message': 'Appointment not found'}), 404
@@ -347,13 +354,41 @@ def store_appointment_message():
 def get_appointment_messages():
     appointment_collection = database["Appointments"]
 
-    # retrieves all messages for the currently logged in student
-    appointment_messages = appointment_collection.find({'nNumber': session['n_number']})
+    # Getting JSON response and extract data
+    data = request.json
+    date = data['date']
+    time = data['time']
+    message = data['message']
+
+    # Convert date to format used in DB
+    datetime_string = f"{date} {time}"
+    datetime_object = datetime.strptime(datetime_string, "%Y-%m-%d %H:%M")
+
+    # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
+    formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
+
+    # Updates the appointment with the message
+    # update_one stores the # of modified documents in the variable appointment
+    appointment_cursor = appointment_collection.find_one({
+        'Appointment_date': formatted_datetime,
+        'Appointment_time': time,
+        'nNumber': session['n_number']
+    })
 
     # creates list of messages from DB
-    appointment_messages_list = [x for x in appointment_messages]
+    # This is needed to extract the message from the DB pointer above
+    appointment_message = [appointment['message'] for appointment in appointment_cursor]
 
-    return jsonify(appointment_messages_list)
+    print(appointment_message)
+
+    # If statement depending on if the appointment exists
+    if appointment_cursor is None:
+        # If the appointment does not exist, return an error message
+        return jsonify({'error': 'Appointment not found'}), 404
+
+    else:
+        # If the appointment exists, return the message
+        return jsonify({'message': appointment_cursor['message']}), 200
 
 
 # Deletes an appointment from the DB
