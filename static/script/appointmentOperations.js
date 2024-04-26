@@ -1,3 +1,4 @@
+// TODO: Optimize the code and make it more readable
 function deleteAppointment(courseDate, courseTime){
     let confirmation = confirm("Are you sure you want to delete this appointment?");
     if (confirmation) {
@@ -51,7 +52,7 @@ function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
     $('.blur-container').css('pointer-events', 'none');
     infoBox.css('pointer-events', 'auto');
 
-        getMessagesFromServer();
+    getMessagesFromServer(courseDate, courseTime);
 
     infoBox.find('#appInfo-button').on('click', function() {
         infoBox.fadeOut(function() {
@@ -61,8 +62,8 @@ function showAppInfo(courseTitle, courseDate, courseTime, courseTutor) {
     });
 }
 
-/* This code is responsible for sending messages fro, the user to the server and vice versa, also to show the messages */
-// Sending the message from the text area to the server to store
+// TODO: the sendMessage function is not working properly
+/* This code is responsible for sending messages from, the user to the server and vice versa, also to show the messages */
 function sendMessage(courseDate, courseTime) {
     let appointmentMessage = $('.message-text').val()
     let appMessage = {
@@ -119,20 +120,32 @@ function showAttachMessage(courseDate, courseTime) {
     });
 }
 
+// TODO: the getMessagesFromServer function is not working properly
 // Fetching already sent messages from the server to textarea in the showAppInfo method
-function getMessagesFromServer() {
-    console.log('Successfully entered the function');
+function getMessagesFromServer(courseDate, courseTime) {
     fetch('/get_appointment_messages', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        }
-    })
-        .then(response => response.json())
-        .then(messages => {
-            console.log("HIIIIII");
-            messages.forEach(message => {
-                $('.sent-messages').append(message.message + '\n')
-            });
+        },
+        body: JSON.stringify({
+            date: courseDate,
+            time: courseTime
         })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(messages => {
+        console.log(messages);
+        messages.forEach(message => {
+            $('.sent-messages').append(message.Message + '\n'); // Append the messages to the textarea
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
