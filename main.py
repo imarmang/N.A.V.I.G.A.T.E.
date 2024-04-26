@@ -15,7 +15,7 @@ from datetime import datetime
 import secrets
 
 # Importing the database class
-from database_class import Database
+# from database_class import Database
 
 app = Flask(__name__)
 
