@@ -15,21 +15,15 @@ from datetime import datetime
 import secrets
 
 # Importing the database class
-# from database_class import Database
+from database_class import Database
 
 app = Flask(__name__)
 
-
 # Database connection to fetch students database for student page
-client = pymongo.MongoClient("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l4xvkly.mongodb.net/")
-database = client["NVGT"]
-students_collection = database["Students"]
-staff_collection = database["Staff"]
-
-# db = Database("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l4xvkly.mongodb.net/", "NVGT")
-# students_collection = db.get_collection("Students")
-# staff_collection = db.get_collection("Staff")
-
+db = Database("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l4xvkly.mongodb.net/", "NVGT")
+students_collection = db.get_collection("Students")
+staff_collection = db.get_collection("Staff")
+appointment_collection = db.get_collection("Appointments")
 
 # Random key for session
 app.secret_key = secrets.token_urlsafe(16)
@@ -42,10 +36,11 @@ def check_logged_in(func):
         if 'n_number' not in session:
             return redirect(url_for('student_login'))
         return func()
+
     return wrapper_func
 
 
-#Used for post redirect get function to handle form auto submission issue.
+# Used for post redirect get function to handle form auto submission issue.
 @app.route('/student_login')
 def student_login():
     return render_template('student_login.html')
@@ -54,7 +49,6 @@ def student_login():
 # Login page
 @app.route('/', methods=['GET', 'POST'])
 def student_home():
-
     # If structure to get the username and password and pass it into the check function
     if request.method == 'POST':
         # Variables to hold username and password
@@ -77,13 +71,14 @@ def login_successful(username, password):
         return False
 
     # Finds the student that matches the username and store the corresponding database table
-    student = students_collection.find_one({'student_info.email': username})
+    student = db.find_one('Students', {'student_info.email': username})
 
     if student is None:
         return False
 
     # Checks if the username and password match the database
-    elif student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"], password):
+    elif student["student_info"]["email"] == username and check_password_hash(student["student_info"]["password"],
+                                                                              password):
         session['n_number'] = student['student_info']['nNumber']
         return True
     else:
@@ -98,9 +93,8 @@ def logout():
 
 
 # Flask Route to handle account creation
-@app.route('/create_account', methods = ['POST', 'GET'])
+@app.route('/create_account', methods=['POST', 'GET'])
 def create_account():
-
     # If structure to determine if POST was used
     if request.method == 'POST':
 
@@ -131,9 +125,12 @@ def create_account():
             pw_hash = generate_password_hash(password).decode('utf-8')
 
             # Input information into database by wrapping it in a dictionary
-            inputDict = {'courses': student_courses, 'first_name': firstName, 'last_name': lastName, 'student_info': {'email': email, 'password': pw_hash, 'nNumber': nNumber}}
+            inputDict = {'courses': student_courses, 'first_name': firstName, 'last_name': lastName,
+                         'student_info': {'email': email, 'password': pw_hash, 'nNumber': nNumber}}
 
-            students_collection.insert_one(inputDict)
+            # students_collection.insert_one(inputDict)
+
+            db.insert_one('Students', inputDict)
 
             # Redirect to the logged in page after account creation on front-end because it expects JSON response
             return jsonify({'message': 'Account created successfully'}), 200
@@ -141,7 +138,7 @@ def create_account():
 
 # Function to check if email is already used
 def email_already_used(email):
-    if students_collection.find_one({'student_info.email': email}) is None:
+    if db.find_one('Students', {'student_info.email': email}) is None:
         return False
     else:
         return True
@@ -160,43 +157,43 @@ def logged_in_home():
     return render_template('logged_in_home.html')
 
 
-@app.route('/get_appointment_info')
-@check_logged_in
-def get_appointment_info():
+# DEPRECATED ROUTE BUT LEAVING IT IN FOR NOW
+# @app.route('/get_appointment_info')
+# @check_logged_in
+# def get_appointment_info():
+#
+#     # Get JSON from front-end to get tutor's email (Could also be in form)
+#     date = request.json['date']
+#
+#     # Get the appointment information
+#     # appointment = appointment_collection.find_one({
+#     #     'Appointment_date': date,
+#     #     'nNumber': session['n_number']
+#     #     })
+#
+#     appointment = db.find_one(
+#         'Appointments',
+#         {'Appointment_date': date,
+#          'nNumber': session['n_number']
+#          })
+#
+#     ret_dict = {
+#         'date': appointment['Appointment_date'],
+#         'time': appointment['Appointment_time'],
+#         'subject': appointment['Subject'],
+#         'course': appointment['Course'],
+#         'tutor': appointment['Tutor'],
+#         'message': appointment['message']
+#     }
+#
+#     return jsonify(ret_dict)
 
-    # Get JSON from front-end to get tutor's email (Could also be in form)
-    date = request.json['date']
 
-    # DB connection
-    appointment_collection = database["Appointments"]
-
-    # Get the appointment information
-    appointment = appointment_collection.find_one({
-        'Appointment_date': date,
-        'nNumber': session['n_number']
-        })
-
-    ret_dict = {
-        'date': appointment['Appointment_date'],
-        'time': appointment['Appointment_time'],
-        'subject': appointment['Subject'],
-        'course': appointment['Course'],
-        'tutor': appointment['Tutor'],
-        'message': appointment['message']
-    }
-
-    return jsonify(ret_dict)
-
-
-@app.route('/create_appointment', methods = ['GET', 'POST'])
+@app.route('/create_appointment', methods=['GET', 'POST'])
 @check_logged_in
 def create_appointment():
-
     # Retrieving N# from session
     nNumber = session.get('n_number')
-
-    # DB connection
-    appointment_collection = database["Appointments"]
 
     # Get relevant information from the form
     course = request.form.get('secondDropdown')
@@ -246,9 +243,10 @@ def create_appointment():
 
         if request.method == 'POST':
 
-            if appointment_collection.find_one({'Appointment_date': formatted_datetime, 'nNumber': nNumber}) is None:
+            if db.find_one('Appointments', {'Appointment_date': formatted_datetime, 'nNumber': nNumber}) is None:
 
-                appointment_collection.insert_one(inputDict)
+                # appointment_collection.insert_one(inputDict)
+                db.insert_one('Appointments', inputDict)
 
                 # If everything is successful reload page
                 return redirect(url_for('logged_in_home'))
@@ -258,18 +256,18 @@ def create_appointment():
 
 
 # To be used for creating appointments using the calendar.
-@app.route('/get_appointments', methods = ['GET'])
+@app.route('/get_appointments', methods=['GET'])
 def calendar():
-    appointment_collection = database["Appointments"]
     appointments = []
 
-    # Only pull the columns I need from DB.
-    for appointment in appointment_collection.find({'nNumber': session['n_number']},
-                                                   {'_id': 0,
-                                                    'Appointment_date': 1,
-                                                    'Course': 1,
-                                                    'Subject': 1,
-                                                    'Tutor': 1,}):
+    # Only pull the columns I need from DB
+    for appointment in db.find('Appointments',
+                               {'nNumber': session['n_number']},
+                               {'_id': 0,
+                                'Appointment_date': 1,
+                                'Course': 1,
+                                'Subject': 1,
+                                'Tutor': 1}):
 
         appointments.append(appointment)
 
@@ -279,12 +277,15 @@ def calendar():
 
 @app.route('/courses', methods=['GET'])
 def get_courses():
-    courses_collection = database["Courses"]
+    courses_collection = db.get_collection("Courses")
 
-    # retrieves all courses
-    courses = courses_collection.find({}, {'_id': 0,
-                                           'Course_ID': 1,
-                                           'Subject': 1})
+    # retrieves all courses from the database
+    courses = db.find('Courses',
+                      {},
+                      {'_id': 0,
+                       'Course_ID': 1,
+                       'Subject': 1})
+
     # creates list of courses formatted as dicts
     courses_list = [x for x in courses]
     print(courses_list)
@@ -294,9 +295,8 @@ def get_courses():
 # Used to load student courses in dropdown when making an appointment
 @app.route('/get_student_courses', methods=['GET'])
 def get_student_courses():
-
     # retrieves all courses for the currently logged in student
-    student_courses = students_collection.find_one({'student_info.nNumber': session['n_number']})['courses']
+    student_courses = db.find_one('Students', {'student_info.nNumber': session['n_number']})['courses']
 
     # creates list of courses formatted as dicts
     # I parse through the courses to get the course ID and subject
@@ -316,15 +316,15 @@ def store_selected_courses():
     print(selected_courses)
 
     # Needed to store the selected courses in the student's database
-    students_collection.update_one({'student_info.nNumber': nNumber},
-                                   {'$set': {'courses': selected_courses}})
+    # students_collection.update_one({'student_info.nNumber': nNumber},
+    #                                {'$set': {'courses': selected_courses}})
+
+    db.update_one('Students', {'student_info.nNumber': nNumber},{ '$set': {'courses': selected_courses}})
 
 
 # Should be good?
 @app.route('/store_appointment_message', methods=['POST'])
 def store_appointment_message():
-    appointment_collection = database["Appointments"]
-
     # Getting JSON response and extract data
     data = request.json
     date = data['date']
@@ -338,15 +338,11 @@ def store_appointment_message():
     # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
     formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
 
-    # Updates the appointment with the message
-    # update_one stores the # of modified documents in the variable appointment
-    appointment = appointment_collection.update_one({
-        'Appointment_date': formatted_datetime,
-        'Appointment_time': time,
-        'nNumber': session['n_number']
-    },
-        {'$set': {'message': message}}
-    )
+    appointment = db.update_one('Appointments',
+                                {'Appointment_date': formatted_datetime,
+                                 'Appointment_time': time,
+                                 'nNumber': session['n_number']},
+                                {'$set': {'message': message}})
 
     # Check if any documents were changed (Just 1 in this case)
     if appointment.modified_count > 0:
@@ -359,8 +355,6 @@ def store_appointment_message():
 # Used to send all messages to front-end for displaying
 @app.route('/get_appointment_messages', methods=['POST'])
 def get_appointment_messages():
-    appointment_collection = database["Appointments"]
-
     # Getting JSON response and extract data
     data = request.json
     date = data['date']
@@ -376,12 +370,10 @@ def get_appointment_messages():
     # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
     formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
 
-    # Finds relevant appointment in DB
-    appointment_cursor = appointment_collection.find_one({
-        'Appointment_date': formatted_datetime,
-        'Appointment_time': time,
-        'nNumber': session['n_number']
-    })
+    appointment_cursor = db.find_one('Appointments',
+                                     {'Appointment_date': formatted_datetime,
+                                      'Appointment_time': time,
+                                      'nNumber': session['n_number']})
 
     # Extracts message from DB entry
     appointment_message = appointment_cursor['message']
@@ -413,16 +405,11 @@ def delete_appointment():
     # Combine the date and time into a single string then convert it to correct format
     formatted_datetime = f"{date}T{time}"
 
-    # Get the appointment collection
-    appointment_collection = database["Appointments"]
-
     print("formatted_datetime: ", formatted_datetime)
 
-    # Find the appointment that matches the date, time, and nNumber
-    appointment = appointment_collection.find_one({
-        'Appointment_date': formatted_datetime,
-        'nNumber': session['n_number']
-    })
+    appointment = db.find_one('Appointments',
+                              {'Appointment_date': formatted_datetime,
+                               'nNumber': session['n_number']})
 
     print("appointment: ", appointment)
 
@@ -444,7 +431,6 @@ def delete_appointment():
 # NOT BEING USED RIGHT NOW
 @app.route('/get_subject_availability_at_specific_time', methods=['GET'])
 def get_subject_availability_at_specific_time():
-
     # Get the specific day and subject from the JSON request
     # JSON response should be in the form of {"subject": "CSIS 2101", "date": "mm dd yyyy", "time": "hh:mm"}
     data = request.json
@@ -455,9 +441,6 @@ def get_subject_availability_at_specific_time():
     # Convert the date string to a datetime object and get the day of the week
     date_object = datetime.strptime(specific_date, "%m-%d-%y")
     specific_day = date_object.strftime("%A")
-
-    # Get the appointment collection
-    appointment_collection = database["Appointments"]
 
     # Retrieve all the tutors
     tutors = staff_collection.find({})
@@ -544,11 +527,8 @@ def get_subject_availability():
     # Print the specific day
     print(f"Specific day: {specific_day}")
 
-    # Get the appointment collection
-    appointment_collection = database["Appointments"]
-
     # Retrieve all the tutors
-    tutors = staff_collection.find({})
+    tutors = db.find('Staff', {})
 
     # Initialize an empty list to store the tutor availability
     tutor_availability = []
@@ -585,19 +565,15 @@ def get_subject_availability():
 
                         print(formatted_datetime)
 
-                        # Check if an appointment for this time and tutor already exists
-                        existing_tutor_appointment = appointment_collection.find_one({
-                            'Appointment_date': formatted_datetime,
-                            'Appointment_time': time_slot['start_time'],
-                            'Tutor': tutor['first_name'] + ' ' + tutor['last_name']
-                        })
+                        existing_tutor_appointment = db.find_one('Appointments',
+                                                                 {'Appointment_date': formatted_datetime,
+                                                                  'Appointment_time': time_slot['start_time'],
+                                                                  'Tutor': tutor['first_name'] + ' ' + tutor['last_name']})
 
-                        # Check if an appointment for this time and current user already exists
-                        existing_user_appointment = appointment_collection.find_one({
-                            'Appointment_date': formatted_datetime,
-                            'Appointment_time': time_slot['start_time'],
-                            'nNumber': session['n_number']
-                        })
+                        existing_user_appointment = db.find_one('Appointments',
+                                                               {'Appointment_date': formatted_datetime,
+                                                                'Appointment_time': time_slot['start_time'],
+                                                                'nNumber': session['n_number']})
 
                         # If no existing appointment for the tutor and the user, add the start time to the tutor's times
                         if existing_tutor_appointment is None and existing_user_appointment is None:
@@ -621,6 +597,13 @@ def get_subject_availability():
 
     # Return the tutor availability as a JSON response
     return jsonify(tutor_availability)
+
+
+# Route for generic error handling
+@app.route('/error')
+def error():
+    error_message = request.args.get('message', 'An error occurred.')
+    return render_template('error.html', error=error_message)
 
 
 if __name__ == '__main__':
