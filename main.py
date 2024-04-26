@@ -14,6 +14,9 @@ from datetime import datetime
 # Used to generate a random key for the session
 import secrets
 
+# Importing the database class
+from database_class import Database
+
 app = Flask(__name__)
 
 
@@ -22,6 +25,10 @@ client = pymongo.MongoClient("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l
 database = client["NVGT"]
 students_collection = database["Students"]
 staff_collection = database["Staff"]
+
+# db = Database("mongodb+srv://NAVIGATE:MQc0UmcHj4KZE3tP@navigate.l4xvkly.mongodb.net/", "NVGT")
+# students_collection = db.get_collection("Students")
+# staff_collection = db.get_collection("Staff")
 
 
 # Random key for session
@@ -350,7 +357,7 @@ def store_appointment_message():
 
 
 # Used to send all messages to front-end for displaying
-@app.route('/get_appointment_messages', methods=['GET'])
+@app.route('/get_appointment_messages', methods=['POST'])
 def get_appointment_messages():
     appointment_collection = database["Appointments"]
 
@@ -358,7 +365,9 @@ def get_appointment_messages():
     data = request.json
     date = data['date']
     time = data['time']
-    message = data['message']
+
+    print("date: ", date)
+    print("time: ", time)
 
     # Convert date to format used in DB
     datetime_string = f"{date} {time}"
@@ -367,17 +376,15 @@ def get_appointment_messages():
     # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
     formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
 
-    # Updates the appointment with the message
-    # update_one stores the # of modified documents in the variable appointment
+    # Finds relevant appointment in DB
     appointment_cursor = appointment_collection.find_one({
         'Appointment_date': formatted_datetime,
         'Appointment_time': time,
         'nNumber': session['n_number']
     })
 
-    # creates list of messages from DB
-    # This is needed to extract the message from the DB pointer above
-    appointment_message = [appointment['message'] for appointment in appointment_cursor]
+    # Extracts message from DB entry
+    appointment_message = appointment_cursor['message']
 
     print(appointment_message)
 
@@ -614,12 +621,6 @@ def get_subject_availability():
 
     # Return the tutor availability as a JSON response
     return jsonify(tutor_availability)
-
-
-# Route to allow staff with elevated access to modify tutor availability
-@app.route('/modify_tutor_availability', methods=['POST'])
-def modify_tutor_availability():
-    pass
 
 
 if __name__ == '__main__':

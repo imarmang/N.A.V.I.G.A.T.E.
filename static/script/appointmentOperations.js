@@ -124,7 +124,7 @@ function showAttachMessage(courseDate, courseTime) {
 // Fetching already sent messages from the server to textarea in the showAppInfo method
 function getMessagesFromServer(courseDate, courseTime) {
     fetch('/get_appointment_messages', {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -139,11 +139,11 @@ function getMessagesFromServer(courseDate, courseTime) {
         }
         return response.json();
     })
-    .then(messages => {
-        console.log(messages);
-        messages.forEach(message => {
-            $('.sent-messages').append(message.Message + '\n'); // Append the messages to the textarea
-        });
+    .then(data => {
+        console.log(data);
+        if (data.message) {
+            $('.sent-messages').append(data.message + '\n'); // Append the message to the textarea
+        }
     })
     .catch(error => {
         console.error('Error:', error);
