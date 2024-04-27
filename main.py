@@ -309,11 +309,9 @@ def store_selected_courses():
 
     print(selected_courses)
 
-    # Needed to store the selected courses in the student's database
-    # students_collection.update_one({'student_info.nNumber': nNumber},
-    #                                {'$set': {'courses': selected_courses}})
-
-    db.update_one('Students', {'student_info.nNumber': nNumber},{ '$set': {'courses': selected_courses}})
+    db.update_one('Students',
+                  {'student_info.nNumber': nNumber},
+                  {'$set': {'courses': selected_courses}})
 
 
 # Should be good?
@@ -613,6 +611,11 @@ def get_tutor_appointments():
 @app.route('/get_tutor_appointment_details', methods=['POST'])
 def get_tutor_appointment_details():
     pass
+
+
+@app.route('/staff_home')
+def staff_home():
+    return render_template('staff_home.html')
 
 
 @app.route('/staff_login', methods=['GET', 'POST'])
