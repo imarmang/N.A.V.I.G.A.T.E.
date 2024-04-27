@@ -1,0 +1,54 @@
+
+/* Calendar CSS */
+.container .calendar
+{
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Style the calendar buttons */
+.fc-header-toolbar .fc-button
+{
+    font-weight: 200;
+    font-size: 15px;
+    color: #fff;
+    background-color: #2F4263;
+    border: none;
+    border-radius: 4px;
+    margin-right: 5px;
+    padding: 5px 10px;
+}
+
+
+.fc-header-toolbar .fc-button:hover
+{
+    background-color: #506B90;
+    color: #fff;
+}
+
+.fc-view-container
+{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border: none;
+    border-radius: 15px;
+}
+
+/* Style the calendar events */
+.fc-event
+{
+    background-color: #2F4263 ;
+    border: none;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    transition: .2s ease-in-out;
+    cursor: pointer;
+}
+
+.fc-event:hover
+{
+    background-color: #506B90;
+}

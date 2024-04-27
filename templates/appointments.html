@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+  </head>
+  <body>
+    <div class="side-bar">
+      <div class="nav-menu">
+        <p class="logo">N.A.V.I.G.A.T.E.</p>
+        <!-- Getting it from boxicon -->
+        <i class="bx bx-menu toggle-btn"></i>
+      </div>
+
+      <!-- Creating the list -->
+      <ul class="list">
+        <li class="list-item active">
+          <a href="#">
+            <i class="bx bxs-home"></i>
+            <span class="link-name" style="--i: 1">Home</span>
+          </a>
+        </li>
+        <li class="list-item">
+          <a href="#">
+            <i class="bx bxs-user-account"></i>
+            <span class="link-name" style="--i: 2">Account</span>
+          </a>
+        </li>
+        <li class="list-item">
+          {# This is the logout button #}
+          <a href="{{ url_for('logout') }}">
+            <i class="bx bx-log-out"></i>
+            <span class="link-name" style="--i: 3">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <h1>Account Page</h1>
+    <p>Welcome to your account page</p>
+    <h1>Appointments Page</h1>
+  </body>
+</html>
