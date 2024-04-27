@@ -5,9 +5,6 @@ from flask_bcrypt import generate_password_hash, check_password_hash
 # This allows me to use my custom decorator with multiple functions and decorators
 from functools import wraps
 
-# Database access
-import pymongo
-
 # Datetime conversion
 from datetime import datetime
 
@@ -33,7 +30,7 @@ app.secret_key = secrets.token_urlsafe(16)
 def check_logged_in(func):
     @wraps(func)
     def wrapper_func():
-        if 'n_number' not in session or 'email' not in session:
+        if 'n_number' not in session and 'email' not in session:
             return redirect(url_for('student_login'))
         return func()
 
@@ -48,7 +45,7 @@ def student_login():
 
 # Login page
 @app.route('/', methods=['GET', 'POST'])
-def student_home():
+def student_login_main():
     # If structure to get the username and password and pass it into the check function
     if request.method == 'POST':
         # Variables to hold username and password
@@ -57,7 +54,8 @@ def student_home():
 
         # If the credentials are good, then go to logged in page. Else, do nothing for now
         if login_successful_student(username, password):
-            return redirect(url_for('logged_in_home'))
+            print("Logged in")
+            return redirect(url_for('student_home'))
         else:
             return redirect(url_for('student_login'))
 
@@ -147,7 +145,7 @@ def email_already_used(email):
 # Home page WIP
 @app.route('/student_home')
 @check_logged_in
-def logged_in_home():
+def student_home():
     return render_template('student_home.html')
 
 
@@ -230,6 +228,7 @@ def create_appointment():
             'Subject': subject,
             'Course': course,
             'Tutor': tutor,
+            ''''Tutor_email': tutor_email,'''  # This is not needed for now
             'message': ''
         }
 
@@ -243,10 +242,10 @@ def create_appointment():
                 db.insert_one('Appointments', inputDict)
 
                 # If everything is successful reload page
-                return redirect(url_for('logged_in_home'))
+                return redirect(url_for('student_home'))
 
             else:
-                return redirect(url_for('logged_in_home'))
+                return redirect(url_for('student_home'))
 
 
 # To be used for creating appointments using the calendar.
