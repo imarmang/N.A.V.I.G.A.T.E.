@@ -54,7 +54,6 @@ def student_login_main():
 
         # If the credentials are good, then go to logged in page. Else, do nothing for now
         if login_successful_student(username, password):
-            print("Logged in")
             return redirect(url_for('student_home'))
         else:
             return redirect(url_for('student_login'))
@@ -228,7 +227,6 @@ def create_appointment():
             'Subject': subject,
             'Course': course,
             'Tutor': tutor,
-            ''''Tutor_email': tutor_email,'''  # This is not needed for now
             'message': ''
         }
 
