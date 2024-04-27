@@ -11,15 +11,15 @@
     />
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/home-page.css') }}"
+      href="{{url_for('static',filename='css/student-home/home-page.css') }}"
     />
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/appointment-details.css') }}"
+      href="{{url_for('static',filename='css/appointments/appointment-details.css') }}"
     />
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/calendar.css') }}"
+      href="{{url_for('static',filename='css/calendar/calendar.css') }}"
     />
 
     <!-- jQuery UI CSS CDN -->
@@ -32,7 +32,10 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
     <!-- Importing jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+    ></script>
 
     <!-- Flatpickr -->
     <link
@@ -49,16 +52,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css"
     />
-
-    <!-- Importing the jQuery fullCalendar -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-
-    <!-- jQuery UI JS CDN -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
-    <!-- Linking to the JS file -->
-    <script src="{{ url_for('static',filename='script/calendar.js') }}"></script>
   </head>
   <body>
     <div class="side-bar">
@@ -71,39 +64,31 @@
       <!-- Creating the list -->
       <ul class="list">
         <li class="list-item active">
+          {# Home Page AKA logged_in_home#}
           <a href="#">
             <i class="bx bxs-home"></i>
             <span class="link-name" style="--i: 1">Home</span>
           </a>
         </li>
+
         <li class="list-item">
           <a href="#">
+            {# Account Settings #}
             <i class="bx bxs-user-account"></i>
             <span class="link-name" style="--i: 2">Account</span>
           </a>
         </li>
-        <li class="list-item">
-          <a href="#">
-            <i class="bx bxs-calendar"></i>
-            <span class="link-name" style="--i: 3">Appointments</span>
-          </a>
-        </li>
-        <li class="list-item">
-          <a href="#">
-            <i class="bx bxs-chat"></i>
-            <span class="link-name" style="--i: 4">Messages</span>
-          </a>
-        </li>
+
         <li class="list-item">
           {# This is the logout button #}
           <a href="{{ url_for('logout') }}">
             <i class="bx bx-log-out"></i>
-            <span class="link-name" style="--i: 5">Logout</span>
+            <span class="link-name" style="--i: 3">Logout</span>
           </a>
         </li>
       </ul>
     </div>
-
+    w
     <!-- Calendar name and the Appointment button -->
     <div class="blur-container" id="blur">
       <div class="buttonAndLogo">
@@ -120,7 +105,11 @@
           <div class="dropdown-container">
             <div class="input-box">
               <label>
-                <select class="dropdowns" id="firstDropdown" name="firstDropdown">
+                <select
+                  class="dropdowns"
+                  id="firstDropdown"
+                  name="firstDropdown"
+                >
                   <option value="Empty">Service Type</option>
                   <option value="TTC">Tutoring Center</option>
                   <option value="CAPS">CAPS Appointment</option>
@@ -196,15 +185,34 @@
 
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/home_page.js') }}"
+      src="{{ url_for('static',filename='script/studentHome/homePage.js') }}"
     ></script>
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/appointmentDropDown.js') }}"
+      src="{{ url_for('static',filename='script/appointments/appointmentDropDown.js') }}"
     ></script>
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/appointmentOperations.js') }}"
+      src="{{ url_for('static',filename='script/appointments/appointmentOperations.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/calendar/calendar.js') }}"
+    ></script>
+    <!-- Importing the jQuery fullCalendar -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"
+    ></script>
+
+    <!-- jQuery UI JS CDN -->
+    <script
+      type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
     ></script>
   </body>
 </html>

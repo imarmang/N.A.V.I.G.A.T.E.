@@ -20,16 +20,16 @@
     <!------------ LINKING THE LOGIN.CSS FILE ---------------->
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/login.css') }}"
+      href="{{url_for('static',filename='css/login-signup/login.css') }}"
     />
     <!------------ LINKING THE DROPDOWN.CSS FILE ---------------->
     <link
       rel="stylesheet"
-      href="{{url_for('static',filename='css/courses-container.css') }}"
+      href="{{url_for('static',filename='css/login-signup/courses-container.css') }}"
     />
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
 
     <title>N.A.V.I.G.A.T.E.</title>
-    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
   </head>
   <body>
     <div class="wrapper">
@@ -191,11 +191,7 @@
             </div>
 
             <div class="input-box">
-              <button
-                class="cont_btn"
-                id="cont_btn"
-                onclick="continueBtn()"
-              >
+              <button class="cont_btn" id="cont_btn" onclick="continueBtn()">
                 Continue
               </button>
             </div>
@@ -246,12 +242,12 @@
     <!-- IMPORTING THE DROPDOWN.JS -->
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/dropdown.js') }}"
+      src="{{ url_for('static',filename='script/loginSignup/dropdown.js') }}"
     ></script>
     <!-- IMPORTING THE MAIN.JS -->
     <script
       type="text/javascript"
-      src="{{ url_for('static',filename='script/main.js') }}"
+      src="{{ url_for('static',filename='script/loginSignup/main.js') }}"
     ></script>
   </body>
 </html>
