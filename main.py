@@ -151,10 +151,10 @@ def staff_login():
 
 
 # Home page WIP
-@app.route('/logged_in_home')
+@app.route('/student_home')
 @check_logged_in
 def logged_in_home():
-    return render_template('logged_in_home.html')
+    return render_template('student_home.html')
 
 
 # DEPRECATED ROUTE BUT LEAVING IT IN FOR NOW
