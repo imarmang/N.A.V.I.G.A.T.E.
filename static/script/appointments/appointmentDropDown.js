@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     // Create the rest of the dropdown
                     option.text = tutor.tutor_name;
-                    option.value = tutor.tutor_name;
+                    option.value = tutor.tutor_name + "," + tutor.tutor_email;
                     thirdDropdown.appendChild(option);
                 }
                 });
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     thirdDropdown.addEventListener('change', function() {
         if (thirdDropdown.value !== "Choose your tutor") {
             // Find the selected tutor from the previously fetched data
-            let selectedTutor = globalData.find(tutor => tutor.tutor_name === thirdDropdown.value);
+            let selectedTutor = globalData.find(tutor => tutor.tutor_name === thirdDropdown.value.split(',')[0]);
 
             // Clear the fourthDropdown
             fourthDropdown.innerHTML = '';
