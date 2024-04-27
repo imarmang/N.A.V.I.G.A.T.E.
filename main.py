@@ -191,6 +191,7 @@ def create_appointment():
     date = request.form.get('datePicker')
     tutor = request.form.get('thirdDropdown')
     time = request.form.get('fourthDropdown')
+    # Need to get tutor email to store in the database
 
     print("time: ", time)
     print("date: ", date)
@@ -572,10 +573,12 @@ def get_subject_availability():
                     break
 
             # If the tutor has times on the specific day, add them to the tutor availability
+            # I store the email too for the front-end to return to me when creating the appointment
             if tutor_times:
                 tutor_availability.append({
                     'tutor_name': tutor['first_name'] + ' ' + tutor['last_name'],
-                    'tutor_times': tutor_times
+                    'tutor_times': tutor_times,
+                    'tutor_email': tutor['email']
                 })
 
     # Print the tutor availability
@@ -595,26 +598,19 @@ def error():
     return render_template('error.html', error=error_message)
 
 
-@app.route('/account_home')
-def account_home():
-    return render_template('account_home.html')
-
-
+# Route to get tutor appointments
 @app.route('/get_tutor_appointments', methods=['POST'])
 def get_tutor_appointments():
     pass
 
 
+# Route to get tutor appointment details
 @app.route('/get_tutor_appointment_details', methods=['POST'])
 def get_tutor_appointment_details():
     pass
 
 
-@app.route('/staff_home')
-def staff_home():
-    return render_template('staff_home.html')
-
-
+# Route for staff login
 @app.route('/staff_login', methods=['GET', 'POST'])
 def staff_login():
     if request.method == 'POST':
@@ -629,6 +625,13 @@ def staff_login():
     return render_template('staff_login.html')
 
 
+# Route to get to account settings home
+@app.route('/account_home')
+def account_home():
+    return render_template('account_home.html')
+
+
+# Function to check if the staff login is successful
 def login_successful_staff(email, password):
     if not email or not password:
         return False
@@ -643,6 +646,19 @@ def login_successful_staff(email, password):
         return True
     else:
         return False
+
+
+# Route to render the staff home page
+@app.route('/staff_home')
+def staff_home():
+    return render_template('staff_home.html')
+
+
+# Logout route for staff
+@app.route('/logout_staff')
+def logout_staff():
+    session.pop('email', None)
+    return render_template('staff_login.html')
 
 
 if __name__ == '__main__':
