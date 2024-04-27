@@ -33,7 +33,7 @@ app.secret_key = secrets.token_urlsafe(16)
 def check_logged_in(func):
     @wraps(func)
     def wrapper_func():
-        if 'n_number' not in session:
+        if 'n_number' not in session or 'email' not in session:
             return redirect(url_for('student_login'))
         return func()
 
@@ -649,4 +649,4 @@ def login_successful_staff(email, password):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
