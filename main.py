@@ -56,7 +56,7 @@ def student_home():
         password = request.form['password']
 
         # If the credentials are good, then go to logged in page. Else, do nothing for now
-        if login_successful(username, password):
+        if login_successful_student(username, password):
             return redirect(url_for('logged_in_home'))
         else:
             return redirect(url_for('student_login'))
@@ -65,7 +65,7 @@ def student_home():
 
 
 # Function to handle checking the username and password. Will check the database.
-def login_successful(username, password):
+def login_successful_student(username, password):
     # Check if username or password is empty
     if not username or not password:
         return False
@@ -142,12 +142,6 @@ def email_already_used(email):
         return False
     else:
         return True
-
-
-# Accessing the staff home
-@app.route('/staff_login')
-def staff_login():
-    return render_template('staff_login.html')
 
 
 # Home page WIP
@@ -609,6 +603,46 @@ def error():
 @app.route('/account_home')
 def account_home():
     return render_template('account_home.html')
+
+
+@app.route('/get_tutor_appointments', methods=['POST'])
+def get_tutor_appointments():
+    pass
+
+
+@app.route('/get_tutor_appointment_details', methods=['POST'])
+def get_tutor_appointment_details():
+    pass
+
+
+@app.route('/staff_login', methods=['GET', 'POST'])
+def staff_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        if login_successful_staff(email, password):
+            return redirect(url_for('staff_home'))
+        else:
+            return redirect(url_for('staff_login'))
+
+    return render_template('staff_login.html')
+
+
+def login_successful_staff(email, password):
+    if not email or not password:
+        return False
+
+    staff = db.find_one('Staff', {'email': email})
+
+    if staff is None:
+        return False
+
+    elif staff['email'] == email and password == 'test':
+        session['email'] = email
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
