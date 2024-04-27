@@ -2,7 +2,122 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Boxicon link -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/student-home/home-page.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/appointments/appointment-details.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/calendar/calendar.css') }}"
+    />
+
+    <!-- jQuery UI CSS CDN -->
+    <link
+      href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet"
+    />
+
+    <title>Staff Home</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+    <!-- Importing jQuery -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+    ></script>
+
+    <!-- Flatpickr -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css"
+    />
   </head>
-  <body></body>
+  <body>
+    <div class="side-bar">
+      <div class="nav-menu">
+        <p class="logo">N.A.V.I.G.A.T.E.</p>
+        <!-- Getting it from boxicon -->
+        <i class="bx bx-menu toggle-btn"></i>
+      </div>
+
+      <!-- Creating the list -->
+      <ul class="list">
+        <li class="list-item active">
+          {# Home Page AKA logged_in_home#}
+          <a href="#">
+            <i class="bx bxs-home"></i>
+            <span class="link-name" style="--i: 1">Home</span>
+          </a>
+        </li>
+
+        <li class="list-item">
+          {# This is the logout button #}
+          <a href="{{ url_for('logout') }}">
+            <i class="bx bx-log-out"></i>
+            <span class="link-name" style="--i: 2">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+
+      <!-- Calendar -->
+      <div class="container">
+        <div class="calendar"></div>
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/studentHome/homePage.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/appointments/appointmentDropDown.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/appointments/appointmentOperations.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/calendar/calendar.js') }}"
+    ></script>
+    <!-- Importing the jQuery fullCalendar -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"
+    ></script>
+
+    <!-- jQuery UI JS CDN -->
+    <script
+      type="text/javascript"
+      src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
+    ></script>
+  </body>
 </html>
