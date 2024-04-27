@@ -606,5 +606,10 @@ def error():
     return render_template('error.html', error=error_message)
 
 
+@app.route('/account_home')
+def account_home():
+    return render_template('account_home.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
