@@ -1,10 +1,64 @@
+{# This is the account settings page #}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Account</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Boxicon link -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='css/student-home/home-page.css') }}"
+    />
 
-</body>
+    <title>Staff Home</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" />
+
+  </head>
+  <body>
+    <div class="side-bar">
+      <div class="nav-menu">
+        <p class="logo">N.A.V.I.G.A.T.E.</p>
+        <!-- Getting it from boxicon -->
+        <i class="bx bx-menu toggle-btn"></i>
+      </div>
+
+      <!-- Creating the list -->
+      <ul class="list">
+        <li class="list-item">
+          {# Home Page AKA logged_in_home#}
+          <a href="student_home">
+            <i class="bx bxs-home"></i>
+            <span class="link-name" style="--i: 1">Home</span>
+          </a>
+        </li>
+
+        <li class="list-item active">
+          <a href="account_home">
+            {# Account Settings #}
+            <i class="bx bxs-user-account"></i>
+            <span class="link-name" style="--i: 2">Account</span>
+          </a>
+        </li>
+
+        <li class="list-item">
+          <a href="{{ url_for('logout') }}">
+            <i class="bx bx-log-out"></i>
+            <span class="link-name" style="--i: 3">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static',filename='script/studentHome/homePage.js') }}"
+    ></script>
+
+  </body>
 </html>
