@@ -189,14 +189,19 @@ def create_appointment():
     # Get relevant information from the form
     course = request.form.get('secondDropdown')
     date = request.form.get('datePicker')
-    tutor = request.form.get('thirdDropdown')
+    tutor_info = request.form.get('thirdDropdown')
     time = request.form.get('fourthDropdown')
-    # Need to get tutor email to store in the database
+
+    # Front end sends me back the info in the form "Tutor Name,Tutor Email"
+    tutor_info = tutor_info.split(",")
+
+    tutor_name = tutor_info[0]
+    tutor_email = tutor_info[1]
 
     print("time: ", time)
     print("date: ", date)
     print("course: ", course)
-    print("tutor: ", tutor)
+    print("tutor: ", tutor_name)
 
     # Split the string into a list
     course_subject_list = course.split(" ")
@@ -227,8 +232,9 @@ def create_appointment():
             'Appointment_time': time,
             'Subject': subject,
             'Course': course,
-            'Tutor': tutor,
-            'message': ''
+            'Tutor': tutor_name,
+            'message': '',
+            'tutor_email': tutor_email
         }
 
         print(inputDict)
@@ -599,9 +605,25 @@ def error():
 
 
 # Route to get tutor appointments
-@app.route('/get_tutor_appointments', methods=['POST'])
+@app.route('/get_tutor_appointments', methods=['GET'])
 def get_tutor_appointments():
-    pass
+    # Retrieve the tutor's email from the session token
+    tutor_email = session.get('email')
+
+    # Check the database for appointments with the tutor's email
+    tutor_appointments = db.find('Appointments', {'tutor_email': tutor_email})
+
+    # Initialize an empty list to store the appointments
+    appointments = []
+
+    # Iterate over the cursor and append each appointment to the list
+    for appointment in tutor_appointments:
+        # Exclude the _id field
+        appointment['_id'] = str(appointment['_id'])
+        appointments.append(appointment)
+
+    # Return the appointments list as a JSON object
+    return jsonify(appointments)
 
 
 # Route to get tutor appointment details
