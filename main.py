@@ -595,6 +595,8 @@ def get_tutor_appointments():
         # Add the student's name to the appointment
         appointment.append(student_name)
 
+        print(f"Appointment: {appointment}")
+
         # Append the appointment to the list
         appointments.append(appointment)
 
