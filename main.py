@@ -589,11 +589,11 @@ def get_tutor_appointments():
 
         # Once the tutor's appointment is found in the DB, use the student's nNumber in the appointment
         # to find the student's first and last name in the Students collection then append it to the appointment
-        student = db.find_one('Students', {'nNumber': appointment['nNumber']})
+        student = db.find_one('Students', {'student_info.nNumber': appointment['nNumber']})
         student_name = student['first_name'] + ' ' + student['last_name']
 
         # Add the student's name to the appointment
-        appointment.append(student_name)
+        appointment['student_name'] = student_name
 
         print(f"Appointment: {appointment}")
 
