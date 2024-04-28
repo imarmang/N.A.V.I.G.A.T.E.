@@ -148,38 +148,6 @@ def student_home():
     return render_template('student_home.html')
 
 
-# DEPRECATED ROUTE BUT LEAVING IT IN FOR NOW
-# @app.route('/get_appointment_info')
-# @check_logged_in
-# def get_appointment_info():
-#
-#     # Get JSON from front-end to get tutor's email (Could also be in form)
-#     date = request.json['date']
-#
-#     # Get the appointment information
-#     # appointment = appointment_collection.find_one({
-#     #     'Appointment_date': date,
-#     #     'nNumber': session['n_number']
-#     #     })
-#
-#     appointment = db.find_one(
-#         'Appointments',
-#         {'Appointment_date': date,
-#          'nNumber': session['n_number']
-#          })
-#
-#     ret_dict = {
-#         'date': appointment['Appointment_date'],
-#         'time': appointment['Appointment_time'],
-#         'subject': appointment['Subject'],
-#         'course': appointment['Course'],
-#         'tutor': appointment['Tutor'],
-#         'message': appointment['message']
-#     }
-#
-#     return jsonify(ret_dict)
-
-
 @app.route('/create_appointment', methods=['GET', 'POST'])
 @check_logged_in
 def create_appointment():
@@ -607,29 +575,64 @@ def error():
 # Route to get tutor appointments
 @app.route('/get_tutor_appointments', methods=['GET'])
 def get_tutor_appointments():
-    # Retrieve the tutor's email from the session token
-    tutor_email = session.get('email')
-
-    # Check the database for appointments with the tutor's email
-    tutor_appointments = db.find('Appointments', {'tutor_email': tutor_email})
-
-    # Initialize an empty list to store the appointments
     appointments = []
 
-    # Iterate over the cursor and append each appointment to the list
-    for appointment in tutor_appointments:
-        # Exclude the _id field
-        appointment['_id'] = str(appointment['_id'])
+    # Only pull the columns I need from DB
+    for appointment in db.find('Appointments',
+                               {'tutor_email': session['email']},
+                               {'_id': 0,
+                                'Appointment_date': 1,
+                                'Course': 1,
+                                'Subject': 1,
+                                'Tutor': 1,
+                                'nNumber': 1}):
+
+        # Once the tutor's appointment is found in the DB, use the student's nNumber in the appointment
+        # to find the student's first and last name in the Students collection then append it to the appointment
+        student = db.find_one('Students', {'nNumber': appointment['nNumber']})
+        student_name = student['first_name'] + ' ' + student['last_name']
+
+        # Add the student's name to the appointment
+        appointment.append(student_name)
+
+        # Append the appointment to the list
         appointments.append(appointment)
 
-    # Return the appointments list as a JSON object
+    # Returns the appointments list as JSON object
     return jsonify(appointments)
 
 
 # Route to get tutor appointment details
-@app.route('/get_tutor_appointment_details', methods=['POST'])
-def get_tutor_appointment_details():
-    pass
+# @app.route('/get_tutor_appointment_details', methods=['POST'])
+# def get_tutor_appointment_details():
+#     # Retrieve the tutor's email from the session token
+#     tutor_email = session.get('email')
+#
+#     # Check the database for appointments with the tutor's email
+#     tutor_appointments = db.find('Appointments', {'tutor_email': tutor_email})
+#
+#     # Initialize an empty list to store the appointments
+#     appointments = []
+#
+#     # Iterate over the cursor and append each appointment to the list
+#     for appointment in tutor_appointments:
+#         # Exclude the _id field
+#         appointment['_id'] = str(appointment['_id'])
+#
+#         # Get the student's nNumber from the appointment
+#         student_nNumber = appointment['nNumber']
+#
+#         # Find the corresponding student in the Students collection
+#         student = db.find_one('Students', {'nNumber': student_nNumber})
+#
+#         # If the student is found, add their first and last name to the appointment
+#         if student is not None:
+#             appointment['student'] = student['first_name'] + ' ' + student['last_name']
+#
+#         appointments.append(appointment)
+#
+#     # Return the appointments list as a JSON object
+#     return jsonify(appointments)
 
 
 # Route for staff login
