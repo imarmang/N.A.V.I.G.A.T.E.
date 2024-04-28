@@ -334,15 +334,21 @@ def get_appointment_messages():
     # Convert the datetime object to a string in the format "YYYY-MM-DDTHH:MM"
     formatted_datetime = datetime_object.strftime("%Y-%m-%dT%H:%M")
 
-    appointment_cursor = db.find_one('Appointments',
-                                     {'Appointment_date': formatted_datetime,
-                                      'Appointment_time': time,
-                                      'nNumber': session['n_number']})
+    # Check if 'n_number' is in the session
+    if 'n_number' in session:
+        nNumber = session['n_number']
+        appointment_cursor = db.find_one('Appointments',
+                                         {'Appointment_date': formatted_datetime,
+                                          'Appointment_time': time,
+                                          'nNumber': nNumber})
 
-    # Extracts message from DB entry
-    appointment_message = appointment_cursor['message']
-
-    print(appointment_message)
+    # If 'n_number' is not in the session, check if 'email' is in the session
+    elif 'email' in session:
+        email = session['email']
+        appointment_cursor = db.find_one('Appointments',
+                                         {'Appointment_date': formatted_datetime,
+                                          'Appointment_time': time,
+                                          'tutor_email': email})
 
     # If statement depending on if the appointment exists
     if appointment_cursor is None:
