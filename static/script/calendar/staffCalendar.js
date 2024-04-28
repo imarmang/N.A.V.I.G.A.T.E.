@@ -67,7 +67,7 @@ function showAppTutorInfo(courseTitle, courseDate, courseTime, student) {
     });
 }
 
-// Fetching already sent messages from the server to textarea in the showAppInfo method
+// Fetching already sent messages from the server to textarea in the showAppInfo method.
 function getMessagesFromServer(courseDate, courseTime) {
     fetch('/get_appointment_messages', {
         method: 'POST',

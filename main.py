@@ -610,40 +610,8 @@ def get_tutor_appointments():
     return jsonify(appointments)
 
 
-# Route to get tutor appointment details
-# @app.route('/get_tutor_appointment_details', methods=['POST'])
-# def get_tutor_appointment_details():
-#     # Retrieve the tutor's email from the session token
-#     tutor_email = session.get('email')
-#
-#     # Check the database for appointments with the tutor's email
-#     tutor_appointments = db.find('Appointments', {'tutor_email': tutor_email})
-#
-#     # Initialize an empty list to store the appointments
-#     appointments = []
-#
-#     # Iterate over the cursor and append each appointment to the list
-#     for appointment in tutor_appointments:
-#         # Exclude the _id field
-#         appointment['_id'] = str(appointment['_id'])
-#
-#         # Get the student's nNumber from the appointment
-#         student_nNumber = appointment['nNumber']
-#
-#         # Find the corresponding student in the Students collection
-#         student = db.find_one('Students', {'nNumber': student_nNumber})
-#
-#         # If the student is found, add their first and last name to the appointment
-#         if student is not None:
-#             appointment['student'] = student['first_name'] + ' ' + student['last_name']
-#
-#         appointments.append(appointment)
-#
-#     # Return the appointments list as a JSON object
-#     return jsonify(appointments)
-
-
 # Route for staff login
+# Works the same as student login
 @app.route('/staff_login', methods=['GET', 'POST'])
 def staff_login():
     if request.method == 'POST':
